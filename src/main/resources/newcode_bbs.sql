@@ -14,7 +14,7 @@ CREATE TABLE `new_code_bbs_user`  (
     `user_concern` int(3) UNSIGNED NULL DEFAULT 0 COMMENT '关注数量',
     `user_fans` int(8) UNSIGNED NULL DEFAULT 0 COMMENT '粉丝数量',
     `user_article` int(8) UNSIGNED NULL DEFAULT 0 COMMENT '文章数量',
-    `comments` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '评论数量',
+    `user_comments` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '评论数量',
     `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE
