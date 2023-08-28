@@ -6,8 +6,11 @@ SET NAMES utf8mb4;
 
 DROP TABLE IF EXISTS `user_data`;
 DROP TABLE IF EXISTS `user_type`;
-DROP TABLE IF EXISTS `user_fans_single`;
-DROP TABLE IF EXISTS `user_fans_double`;
+DROP TABLE IF EXISTS `user_fans_one`;
+DROP TABLE IF EXISTS `user_fans_two`;
+DROP TABLE IF EXISTS `user_chat_one`;
+DROP TABLE IF EXISTS `user_chat_two`;
+DROP TABLE IF EXISTS `user_chat_three`;
 
 #----------------------
 # 用户表
@@ -24,7 +27,8 @@ CREATE TABLE `user_data`  (
       `user_comments` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '评论数量',
       `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
       `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (user_id)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 
@@ -34,29 +38,70 @@ CREATE TABLE `user_data`  (
 CREATE TABLE `user_type`  (
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
       `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
-      `user_nickname` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '头衔昵称,多个昵称以\",\"隔开',
+      `user_nickname` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '头衔昵称,多个昵称以,隔开',
       `user_type` int(3) UNSIGNED NULL DEFAULT 0 COMMENT '权限id,默认0无权限',
       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 #----------------------
-# 关注与粉丝表 单数id
+# 关注与粉丝表 < 5000 id
 #----------------------
-CREATE TABLE `user_fans_single`  (
+CREATE TABLE `user_fans_one`  (
      `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '粉丝id',
      `user_followed_id` bigint(20) UNSIGNED NOT NULL COMMENT '关注的用户id',
+     `user_status` tinyint(1) DEFAULT '0' COMMENT '关注状态(0关注 1取消)',
      PRIMARY KEY (`id`) USING BTREE,
      UNIQUE KEY `user_followed_indx` (`user_id`,`user_followed_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 #----------------------
-# 关注与粉丝表 双数id
+# 关注与粉丝表 > 5000 id
 #----------------------
-CREATE TABLE `user_fans_double`  (
+CREATE TABLE `user_fans_two`  (
      `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '粉丝id',
      `user_followed_id` bigint(20) UNSIGNED NOT NULL COMMENT '关注的用户id',
+     `user_status` tinyint(1) NULL DEFAULT 0 COMMENT '关注状态(0关注 1取消)',
      PRIMARY KEY (`id`) USING BTREE,
      UNIQUE KEY `user_followed_indx` (`user_id`,`user_followed_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+
+#----------------------
+# 聊天表 < 100000 数据
+#----------------------
+    CREATE TABLE `user_chat_one`  (
+     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+     `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+     `user_chat_id` bigint(20) UNSIGNED NOT NULL COMMENT '跟聊天者的id',
+     `user_chat_text` text NOT NULL COMMENT '聊天内容',
+     `user_chat_text_status` tinyint(1) NULL DEFAULT 0 COMMENT '是否是发送文件或者图片 0空 1文件 2图片',
+     `user_addr` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 0 COMMENT '文件或者图片地址',
+     PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+
+#----------------------
+# 聊天表 > 100000 数据
+#----------------------
+CREATE TABLE `user_chat_two`  (
+      `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_chat_id` bigint(20) UNSIGNED NOT NULL COMMENT '跟聊天者的id',
+      `user_chat_text` text NOT NULL COMMENT '聊天内容',
+      `user_chat_text_status` tinyint(1) NULL DEFAULT 0 COMMENT '是否是发送文件或者图片 0空 1文件 2图片',
+      `user_addr` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 0 COMMENT '文件或者图片地址',
+      PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+
+#----------------------
+# 聊天表 > 200000 数据
+#----------------------
+CREATE TABLE `user_chat_three`  (
+      `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_chat_id` bigint(20) UNSIGNED NOT NULL COMMENT '跟聊天者的id',
+      `user_chat_text` text NOT NULL COMMENT '聊天内容',
+      `user_chat_text_status` tinyint(1) NULL DEFAULT 0 COMMENT '是否是发送文件或者图片 0空 1文件 2图片',
+      `user_addr` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 0 COMMENT '文件或者图片地址',
+      PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
