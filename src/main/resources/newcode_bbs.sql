@@ -10,8 +10,14 @@ DROP TABLE IF EXISTS `user_fans_one`;
 DROP TABLE IF EXISTS `user_fans_two`;
 DROP TABLE IF EXISTS `user_chat_one`;
 DROP TABLE IF EXISTS `user_chat_two`;
-DROP TABLE IF EXISTS `user_file`;
-DROP TABLE IF EXISTS `user_type_group`;
+DROP TABLE IF EXISTS `file_data`;
+DROP TABLE IF EXISTS `type_group`;
+DROP TABLE IF EXISTS `bill_recharge`;
+DROP TABLE IF EXISTS `bill_credits`;
+DROP TABLE IF EXISTS `bill_golds`;
+DROP TABLE IF EXISTS `user_token`;
+DROP TABLE IF EXISTS `cache`;
+
 
 
 #----------------------
@@ -55,28 +61,29 @@ CREATE TABLE `user_type`  (
 #----------------------
 # 权限表 0 为空 1 代表有权限
 #----------------------
-CREATE TABLE `user_type_group`  (
+CREATE TABLE `type_group`  (
       `user_type_id` int(6) UNSIGNED NOT NULL COMMENT '权限Id',
-      `user_type_name` char(20) NOT NULL default '' COMMENT '权限名称',
-      `user_type_all` int(11) NULL default 0 COMMENT '任何权限',
-      `user_type_credits_from` int(11) NULL default 0 COMMENT '编辑积分权限',
-      `user_type_allow_read` int(11) NULL default 0 COMMENT '允许访问权限',
-      `user_type_allow_article` int(11) NULL default 0 COMMENT '允许发帖子权限',
-      `user_type_allow_comments` int(11) NULL default 0 COMMENT '允许评论权限',
-      `user_type_allow_attach` int(11) NULL default 0 COMMENT '允许上传文件权限',
-      `user_type_allow_down` int(11) NULL default 0 COMMENT '允许下载文件权限',
-      `user_type_allow_top` int(11) NULL default 0 COMMENT '允许顶置帖子权限',
-      `user_type_allow_update` int(11) NULL default 0 COMMENT '允许更改帖子权限',
-      `user_type_allow_delete` int(11) NULL default 0 COMMENT '允许删除帖子权限',
-      `user_type_allow_move` int(11) NULL default 0 COMMENT '允许移动帖子板块权限',
-      `user_type_allow_ban_user` int(11) NULL default 0 COMMENT '允许禁止用户权限',
-      `user_type_allow_delete_user` int(11) NULL default 0 COMMENT '允许删除用户权限',
-      `user_type_allow_view_ip` int(11) unsigned NULL default 0 COMMENT '允许查看用户敏感信息权限',
+      `type_name` char(20) NOT NULL default '' COMMENT '权限名称',
+      `type_all` int(11) NULL default 0 COMMENT '任何权限',
+      `type_credits_from` int(11) NULL default 0 COMMENT '编辑积分权限',
+      `type_golds_from` int(11) NULL default 0 COMMENT '编辑虚拟币权限',
+      `type_allow_read` int(11) NULL default 0 COMMENT '允许访问权限',
+      `type_allow_article` int(11) NULL default 0 COMMENT '允许发帖子权限',
+      `type_allow_comments` int(11) NULL default 0 COMMENT '允许评论权限',
+      `type_allow_attach` int(11) NULL default 0 COMMENT '允许上传文件权限',
+      `type_allow_down` int(11) NULL default 0 COMMENT '允许下载文件权限',
+      `type_allow_top` int(11) NULL default 0 COMMENT '允许顶置帖子权限',
+      `type_allow_update` int(11) NULL default 0 COMMENT '允许更改帖子权限',
+      `type_allow_delete` int(11) NULL default 0 COMMENT '允许删除帖子权限',
+      `type_allow_move` int(11) NULL default 0 COMMENT '允许移动帖子板块权限',
+      `type_allow_ban_user` int(11) NULL default 0 COMMENT '允许禁止用户权限',
+      `type_allow_delete_user` int(11) NULL default 0 COMMENT '允许删除用户权限',
+      `type_allow_view_ip` int(11) unsigned NULL default 0 COMMENT '允许查看用户敏感信息权限',
       PRIMARY KEY (`user_type_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
-INSERT INTO `user_type_group` SET user_type_id='0', user_type_name='游客组', user_type_all=0, user_type_credits_from=0, user_type_allow_read=1, user_type_allow_article=0, user_type_allow_comments=0, user_type_allow_attach=0, user_type_allow_down=0, user_type_allow_top=0, user_type_allow_update=0, user_type_allow_delete=0, user_type_allow_move=0, user_type_allow_ban_user=0, user_type_allow_delete_user=0, user_type_allow_view_ip=0;
-INSERT INTO `user_type_group` SET user_type_id='1', user_type_name='管理员组', user_type_all=1;
+INSERT INTO `type_group` SET user_type_id='0', type_name='用户组', type_allow_read=1, type_allow_article=1, type_allow_comments=1, type_allow_attach=1, type_allow_down=1;
+INSERT INTO `type_group` SET user_type_id='1', type_name='管理员组', type_all=1;
 
 #----------------------
 # 关注与粉丝表 < 5000 id
@@ -131,9 +138,72 @@ CREATE TABLE `user_chat_two`  (
 #----------------------
 # 文件和图片表
 #----------------------
-CREATE TABLE `user_file`(
+CREATE TABLE `file_data`(
     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-    `user_file_addr` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 0 COMMENT '文件或者图片地址',
+    `file_addr` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 0 COMMENT '文件或者图片地址',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+
+#----------------------
+# todo 帖子表，会员表，评论表，推荐表，大数据表
+# todo 分类板块表，标签表 网站信息表
+#----------------------
+
+#----------------------
+# 充值流水表
+#----------------------
+CREATE TABLE `bill_recharge`(
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+    `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+    `bill_recharge_info` text NOT NULL COMMENT '充值信息',
+    `bill_recharge_addr` text NOT NULL COMMENT '充值来源',
+    `bill_recharge_data` text NOT NULL COMMENT '充值账单',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+
+#----------------------
+# 积分流水表
+#----------------------
+CREATE TABLE `bill_credits`(
+     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+     `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+     `bill_credits_data` text NOT NULL COMMENT '积分具体信息',
+     `bill_credits_admin_id` int(11) NULL DEFAULT 0 COMMENT '管理员id,如果没有赠送事件就默认为-1',
+     `bill_credits_admin_data` text NULL DEFAULT NULL COMMENT '给予原因,如果没有默认就为null',
+     PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+
+#----------------------
+# 虚拟币流水表
+#----------------------
+CREATE TABLE `bill_golds`(
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+    `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+    `bill_golds_data` text NOT NULL COMMENT '虚拟币具体信息',
+    `bill_golds_admin_id` int(11) NULL DEFAULT 0 COMMENT '管理员id,如果没有赠送事件就默认为-1',
+    `bill_golds_admin_data` text NULL DEFAULT NULL COMMENT '给予原因,如果没有默认就为null',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+
+#----------------------
+# 令牌持久化表
+#----------------------
+CREATE TABLE `user_token`(
+      `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `token` varchar(60) NOT NULL COMMENT 'token令牌',
+      `token_expired_time` timestamp NOT NULL COMMENT '过期时间',
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE KEY `user_token` (`token`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+
+#----------------------
+# 临时数据表
+#----------------------
+CREATE TABLE `cache` (
+      `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键Id',
+       `cache_data` text NOT NULL COMMENT '临时数据',
+      `cache_expired_time` timestamp NOT NULL COMMENT '过期时间',
+       PRIMARY KEY(id)
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
