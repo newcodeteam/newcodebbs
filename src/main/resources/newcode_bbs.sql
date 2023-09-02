@@ -145,8 +145,8 @@ CREATE TABLE `file_data`(
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 #----------------------
-# todo 帖子表，会员表，评论表，推荐表，大数据表
-# todo 分类板块表，标签表 网站信息表
+# todo 帖子表(postings)，会员表(vip)，评论表(comments)，推荐表(recommend)，数据分析表(analyse)
+# todo 分类板块表(category)，标签表(tag),网站信息表(info)
 #----------------------
 
 
