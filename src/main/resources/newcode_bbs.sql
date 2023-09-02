@@ -149,10 +149,11 @@ CREATE TABLE `file_data`(
 # todo 分类板块表，标签表 网站信息表
 #----------------------
 
+
 #----------------------
 # 充值流水表
 #----------------------
-CREATE TABLE `bill_recharge`(
+CREATE TABLE `order_bill_recharge`(
     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
     `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
     `bill_recharge_info` text NOT NULL COMMENT '充值信息',
@@ -164,7 +165,7 @@ CREATE TABLE `bill_recharge`(
 #----------------------
 # 积分流水表
 #----------------------
-CREATE TABLE `bill_credits`(
+CREATE TABLE `order_bill_credits`(
      `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
      `bill_credits_data` text NOT NULL COMMENT '积分具体信息',
@@ -176,7 +177,7 @@ CREATE TABLE `bill_credits`(
 #----------------------
 # 虚拟币流水表
 #----------------------
-CREATE TABLE `bill_golds`(
+CREATE TABLE `order_bill_golds`(
     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
     `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
     `bill_golds_data` text NOT NULL COMMENT '虚拟币具体信息',
