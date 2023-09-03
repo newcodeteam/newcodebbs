@@ -12,9 +12,9 @@ DROP TABLE IF EXISTS `user_chat_one`;
 DROP TABLE IF EXISTS `user_chat_two`;
 DROP TABLE IF EXISTS `file_data`;
 DROP TABLE IF EXISTS `type_group`;
-DROP TABLE IF EXISTS `bill_recharge`;
-DROP TABLE IF EXISTS `bill_credits`;
-DROP TABLE IF EXISTS `bill_golds`;
+DROP TABLE IF EXISTS `order_bill_recharge`;
+DROP TABLE IF EXISTS `order_bill_credits`;
+DROP TABLE IF EXISTS `order_bill_golds`;
 DROP TABLE IF EXISTS `user_token`;
 DROP TABLE IF EXISTS `cache`;
 
@@ -79,6 +79,7 @@ CREATE TABLE `type_group`  (
       `type_allow_ban_user` int(11) NULL default 0 COMMENT '允许禁止用户权限',
       `type_allow_delete_user` int(11) NULL default 0 COMMENT '允许删除用户权限',
       `type_allow_view_ip` int(11) unsigned NULL default 0 COMMENT '允许查看用户敏感信息权限',
+      `type_allow_category` int(11) unsigned NULL default 0 COMMENT '所属板块id',
       PRIMARY KEY (`user_type_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
@@ -106,7 +107,7 @@ CREATE TABLE `user_fans_two`  (
       `user_fans_followed_id` bigint(20) UNSIGNED NOT NULL COMMENT '关注的用户id',
       `user_fans_status` tinyint(1) DEFAULT '0' COMMENT '关注状态(0关注 1取消)',
       PRIMARY KEY (`id`) USING BTREE,
-      UNIQUE KEY `user_followed_indx` (`user_id`,`user_fans_followed_id`)
+      UNIQUE KEY `user_followed_index` (`user_id`,`user_fans_followed_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 #----------------------
@@ -145,9 +146,30 @@ CREATE TABLE `file_data`(
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 #----------------------
-# todo 帖子表(postings)，会员表(vip)，评论表(comments)，推荐表(recommend)，数据分析表(analyse)
+# todo 会员表(vip)，评论表(comments)，推荐表(recommend)，数据分析表(analyse)
 # todo 分类板块表(category)，标签表(tag),网站信息表(info)
 #----------------------
+
+CREATE TABLE `postings_data`(
+     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+     `postings_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子id',
+     `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子发布的id',
+     `postings_title` varchar(255) not null comment '帖子标题',
+     `postings_content` text NOT NULL COMMENT '帖子内容',
+     `postings_file_id` bigint(20) NULL DEFAULT -1 COMMENT '是否有文件 如有文件就是文件id地址 没有就是-1',
+     UNIQUE (`postings_id`),
+     PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+# todo 是否是教程 tutorial，查看权限，是否会员能访问，板块归属
+CREATE TABLE `postings_info`(
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+    `postings_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子id',
+    `postings_title` varchar(255) not null comment '帖子标题',
+    `postings_outline` varchar(255) NOT NULL COMMENT '帖子简介',
+    `postings_label` varchar(255) NOT NULL COMMENT '帖子标签，用,分割开关键词',
+    UNIQUE (`postings_id`),
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 
 #----------------------
