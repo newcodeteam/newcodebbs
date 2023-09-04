@@ -50,7 +50,7 @@ CREATE TABLE `user_data`  (
       `login_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '登陆时间',
       PRIMARY KEY (`id`) USING BTREE,
       UNIQUE (user_id)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '用户表';
 
 
 #----------------------
@@ -62,7 +62,7 @@ CREATE TABLE `user_type`  (
       `user_type_nickname` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '头衔昵称,多个昵称以,隔开',
       `user_type_id` int(3) UNSIGNED NULL DEFAULT 0 COMMENT '权限id,默认0 游客组 无权限',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '权限表';
 
 #----------------------
 # 权限表 0 为空 1 代表有权限
@@ -87,7 +87,7 @@ CREATE TABLE `type_group`  (
       `type_allow_view_ip` int(11) unsigned NULL default 0 COMMENT '允许查看用户敏感信息权限',
       `type_allow_category` int(11) unsigned NULL default 0 COMMENT '所属板块id',
       PRIMARY KEY (`user_type_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '权限表 0 为空 1 代表有权限';
 
 INSERT INTO `type_group` SET user_type_id='0', type_name='用户组', type_allow_read=1, type_allow_article=1, type_allow_comments=1, type_allow_attach=1, type_allow_down=1;
 INSERT INTO `type_group` SET user_type_id='1', type_name='管理员组', type_all=1;
@@ -102,7 +102,7 @@ CREATE TABLE `user_fans_one`  (
      `user_fans_status` tinyint(1) DEFAULT '0' COMMENT '关注状态(0关注 1取消)',
      PRIMARY KEY (`id`) USING BTREE,
      UNIQUE KEY `user_followed_indx` (`user_id`,`user_fans_followed_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '关注与粉丝表 < 5000 id';
 
 #----------------------
 # 关注与粉丝表 > 5000 id
@@ -114,7 +114,7 @@ CREATE TABLE `user_fans_two`  (
       `user_fans_status` tinyint(1) DEFAULT '0' COMMENT '关注状态(0关注 1取消)',
       PRIMARY KEY (`id`) USING BTREE,
       UNIQUE KEY `user_followed_index` (`user_id`,`user_fans_followed_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '关注与粉丝表 > 5000 id';
 
 #----------------------
 # 聊天表 < 300000 数据
@@ -127,7 +127,7 @@ CREATE TABLE `user_chat_one`  (
      `user_chat_text_status` tinyint(1) NULL DEFAULT 0 COMMENT '是否是发送文件或者图片 0空 1文件 2图片',
      `user_chat_addr` bigint(20) NULL DEFAULT 0 COMMENT '文件或者图片id',
      PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '聊天表 < 300000 数据';
 
 #----------------------
 # 聊天表 > 300000 数据
@@ -140,7 +140,7 @@ CREATE TABLE `user_chat_two`  (
       `user_chat_text_status` tinyint(1) NULL DEFAULT 0 COMMENT '是否是发送文件或者图片 0空 1文件 2图片',
       `user_chat_addr` bigint(20) NULL DEFAULT 0 COMMENT '文件或者图片id',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '聊天表 > 300000 数据';
 
 #----------------------
 # 文件和图片表
@@ -149,7 +149,7 @@ CREATE TABLE `file_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
       `file_addr` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 0 COMMENT '文件或者图片地址',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '文件和图片表';
 
 #----------------------
 # 分类板块表
@@ -162,7 +162,7 @@ CREATE TABLE `category_data`(
       `category_keywords` varchar(255) NOT NULL COMMENT '分类关键词，用,分割',
       `category_description` text NOT NULL COMMENT '分类描述',
       PRIMARY KEY (`id`) USING BTREE
-)ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+)ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '分类板块表';
 
 #----------------------
 # 标签表
@@ -172,7 +172,7 @@ CREATE TABLE `tag_data`(
       `tag_id` bigint(20) UNSIGNED NOT NULL COMMENT '标签id',
       `tag_name` varchar(255) NOT NULL COMMENT '标签名称',
       PRIMARY KEY (`id`) USING BTREE
-)ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+)ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '标签表';
 
 
 #----------------------
@@ -185,7 +185,7 @@ CREATE TABLE `recommend_data`(
       `recommend_type` int(5) UNSIGNED NOT NULL COMMENT '推荐类型id，自己定义',
       `recommend_text` text COMMENT '推荐原因',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '推荐信息表';
 
 
 #----------------------
@@ -197,7 +197,7 @@ CREATE TABLE `vip_data`(
       `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
       `vip_status` tinyint(1) DEFAULT '0' COMMENT 'vip状态 0为正常',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT 'vip表';
 
 #----------------------
 # 评论表
@@ -211,7 +211,7 @@ CREATE TABLE `comments_data`(
       `comments_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
       UNIQUE KEY `comments_and_id` (`postings_id`,`comments_id`),
       PRIMARY KEY (`id`) USING BTREE
-)ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+)ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '评论表';
 
 #----------------------
 # 帖子表
@@ -224,7 +224,7 @@ CREATE TABLE `postings_data`(
       `postings_file_id` bigint(20) NULL DEFAULT -1 COMMENT '是否有文件 如有文件就是文件id地址 没有就是-1',
       UNIQUE (`postings_id`),
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '帖子表';
 
 #----------------------
 # 帖子信息表
@@ -241,7 +241,7 @@ CREATE TABLE `postings_info`(
       `postings_vip_category_id` int(11) NOT NULL COMMENT '分类id',
       UNIQUE (`postings_id`),
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '帖子信息表';
 
 #----------------------
 # 帖子其他信息
@@ -252,7 +252,7 @@ CREATE TABLE `postings_other`(
       `postings_likes` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '帖子点赞数',
       `postings_views` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '帖子浏览量数',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '帖子其他信息';
 
 #----------------------
 # 用户数据分析表
@@ -263,7 +263,7 @@ CREATE TABLE `user_analyse_data`(
       `weighted_user_tag` int(5) UNSIGNED NOT NULL COMMENT '用户访问的关键词id或自己自定义的关键词id,多个用，分割开',
       `weighted_user_category` int(5) UNSIGNED NOT NULL COMMENT '访问的板块或自己定义的板块id，多个用，分割开',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '帖子其他信息';
 
 #----------------------
 # 数据分析以及推荐权重表
@@ -276,7 +276,7 @@ CREATE TABLE `analyse_data`(
       `weighted_category` int(5) UNSIGNED NOT NULL COMMENT '帖子所属板块',
       `weighted_type` text NOT NULL COMMENT '推荐理由',
    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '数据分析以及推荐权重表';
 
 
 #----------------------
@@ -289,7 +289,7 @@ CREATE TABLE `order_bill_recharge`(
       `bill_recharge_addr` text NOT NULL COMMENT '充值来源',
       `bill_recharge_data` text NOT NULL COMMENT '充值账单',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '充值流水表';
 
 #----------------------
 # 积分流水表
@@ -301,7 +301,7 @@ CREATE TABLE `order_bill_credits`(
       `bill_credits_admin_id` int(11) NULL DEFAULT 0 COMMENT '管理员id,如果没有赠送事件就默认为-1',
       `bill_credits_admin_data` text NULL DEFAULT NULL COMMENT '给予原因,如果没有默认就为null',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '积分流水表';
 
 #----------------------
 # 虚拟币流水表
@@ -313,7 +313,7 @@ CREATE TABLE `order_bill_golds`(
       `bill_golds_admin_id` int(11) NULL DEFAULT 0 COMMENT '管理员id,如果没有赠送事件就默认为-1',
       `bill_golds_admin_data` text NULL DEFAULT NULL COMMENT '给予原因,如果没有默认就为null',
       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '虚拟币流水表';
 
 #----------------------
 # 令牌持久化表
@@ -325,7 +325,7 @@ CREATE TABLE `user_token`(
       `token_expired_time` timestamp NOT NULL COMMENT '过期时间',
       PRIMARY KEY (`id`) USING BTREE,
       UNIQUE KEY `user_tokens` (`token`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '令牌持久化表';
 
 #----------------------
 # 临时数据表
@@ -335,5 +335,16 @@ CREATE TABLE `cache` (
        `cache_data` text NOT NULL COMMENT '临时数据',
       `cache_expired_time` timestamp NOT NULL COMMENT '过期时间',
        PRIMARY KEY(id)
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '临时数据表';
+
+#----------------------
+# 网站信息表
+#----------------------
+CREATE TABLE `website_data`(
+     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+     `name` text NOT NULL COMMENT '名称',
+     `keyword` text COMMENT '关键词多个以,分隔开',
+     `description` text COMMENT '描述',
+     PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '网站信息表';
 
