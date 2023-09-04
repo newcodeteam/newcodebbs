@@ -80,6 +80,12 @@
             <artifactId>hutool-all</artifactId>
             <version>5.7.17</version>
         </dependency>
+<!--        redis客户端-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.23.3</version>
+        </dependency>
     </dependencies>
 
     <build>
