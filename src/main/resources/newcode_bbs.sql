@@ -19,11 +19,15 @@ DROP TABLE IF EXISTS `vip_data`;
 DROP TABLE IF EXISTS `comments_data`;
 DROP TABLE IF EXISTS `postings_data`;
 DROP TABLE IF EXISTS `postings_info`;
+DROP TABLE IF EXISTS `postings_other`;
+DROP TABLE IF EXISTS `user_analyse_data`;
+DROP TABLE IF EXISTS `analyse_data`;
+DROP TABLE IF EXISTS `order_bill_recharge`;
+DROP TABLE IF EXISTS `order_bill_credits`;
+DROP TABLE IF EXISTS `order_bill_golds`;
+DROP TABLE IF EXISTS `user_token`;
 DROP TABLE IF EXISTS `cache`;
-DROP TABLE IF EXISTS `cache`;
-DROP TABLE IF EXISTS `cache`;
-DROP TABLE IF EXISTS `cache`;
-
+DROP TABLE IF EXISTS `website_data`;
 
 
 #----------------------
