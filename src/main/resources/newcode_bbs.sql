@@ -6,16 +6,22 @@ SET NAMES utf8mb4;
 
 DROP TABLE IF EXISTS `user_data`;
 DROP TABLE IF EXISTS `user_type`;
+DROP TABLE IF EXISTS `type_group`;
 DROP TABLE IF EXISTS `user_fans_one`;
 DROP TABLE IF EXISTS `user_fans_two`;
 DROP TABLE IF EXISTS `user_chat_one`;
 DROP TABLE IF EXISTS `user_chat_two`;
 DROP TABLE IF EXISTS `file_data`;
-DROP TABLE IF EXISTS `type_group`;
-DROP TABLE IF EXISTS `order_bill_recharge`;
-DROP TABLE IF EXISTS `order_bill_credits`;
-DROP TABLE IF EXISTS `order_bill_golds`;
-DROP TABLE IF EXISTS `user_token`;
+DROP TABLE IF EXISTS `category_data`;
+DROP TABLE IF EXISTS `tag_data`;
+DROP TABLE IF EXISTS `recommend_data`;
+DROP TABLE IF EXISTS `vip_data`;
+DROP TABLE IF EXISTS `comments_data`;
+DROP TABLE IF EXISTS `postings_data`;
+DROP TABLE IF EXISTS `postings_info`;
+DROP TABLE IF EXISTS `cache`;
+DROP TABLE IF EXISTS `cache`;
+DROP TABLE IF EXISTS `cache`;
 DROP TABLE IF EXISTS `cache`;
 
 
@@ -249,22 +255,20 @@ CREATE TABLE `postings_other`(
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 #----------------------
-# 数据分析以及推荐权重表
+# 用户数据分析表
 #----------------------
-CREATE TABLE `analyse_data`(
+CREATE TABLE `user_analyse_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `postings_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子id',
-      `postings_weighted` int(5) UNSIGNED NOT NULL COMMENT '帖子权重',
-      `weighted_tag` int(5) UNSIGNED NOT NULL COMMENT '帖子所属标签',
-      `weighted_category` int(5) UNSIGNED NOT NULL COMMENT '帖子所属板块',
-      `weighted_type` text NOT NULL COMMENT '推荐理由',
+      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `weighted_user_tag` int(5) UNSIGNED NOT NULL COMMENT '用户访问的关键词id或自己自定义的关键词id,多个用，分割开',
+      `weighted_user_category` int(5) UNSIGNED NOT NULL COMMENT '访问的板块或自己定义的板块id，多个用，分割开',
       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 #----------------------
-# todo 用户数据分析表
+# 数据分析以及推荐权重表
 #----------------------
-CREATE TABLE `user_analyse_data`(
+CREATE TABLE `analyse_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
       `postings_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子id',
       `postings_weighted` int(5) UNSIGNED NOT NULL COMMENT '帖子权重',
