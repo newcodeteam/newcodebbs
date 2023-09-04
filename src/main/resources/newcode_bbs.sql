@@ -324,7 +324,7 @@ CREATE TABLE `user_token`(
       `token` varchar(60) NOT NULL COMMENT 'token令牌',
       `token_expired_time` timestamp NOT NULL COMMENT '过期时间',
       PRIMARY KEY (`id`) USING BTREE,
-      UNIQUE KEY `user_token` (`token`)
+      UNIQUE KEY `user_tokens` (`token`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact;
 
 #----------------------
