@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,12 +33,11 @@ public class UserToken implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @TableField("user_id")
     private Long userId;
 
-    @ApiModelProperty(value = "token令牌")
-    private String token;
-
     @ApiModelProperty(value = "过期时间")
+    @TableField("token_expired_time")
     private LocalDateTime tokenExpiredTime;
 
 

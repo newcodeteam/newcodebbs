@@ -325,10 +325,8 @@ CREATE TABLE `order_bill_golds`(
 CREATE TABLE `user_token`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
       `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
-      `token` varchar(60) NOT NULL COMMENT 'token令牌',
       `token_expired_time` timestamp NOT NULL COMMENT '过期时间',
-      PRIMARY KEY (`id`) USING BTREE,
-      UNIQUE KEY `user_tokens` (`token`)
+      PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '令牌持久化表';
 
 #----------------------
