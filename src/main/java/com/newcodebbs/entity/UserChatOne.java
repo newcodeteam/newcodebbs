@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,18 +33,23 @@ public class UserChatOne implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "跟聊天者的id")
+    @TableField("user_chat_id")
     private Long userChatId;
 
     @ApiModelProperty(value = "聊天内容")
+    @TableField("user_chat_text")
     private String userChatText;
 
     @ApiModelProperty(value = "是否是发送文件或者图片 0空 1文件 2图片")
+    @TableField("user_chat_text_status")
     private Boolean userChatTextStatus;
 
     @ApiModelProperty(value = "文件或者图片id")
+    @TableField("user_chat_addr")
     private Long userChatAddr;
 
 

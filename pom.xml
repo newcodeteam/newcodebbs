@@ -86,6 +86,12 @@
             <artifactId>redisson</artifactId>
             <version>3.23.3</version>
         </dependency>
+<!--        图形验证码-->
+        <dependency>
+            <groupId>com.xingyuv</groupId>
+            <artifactId>spring-boot-starter-captcha-plus</artifactId>
+            <version>1.0.6</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,12 +33,15 @@ public class UserFansTwo implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "粉丝id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "关注的用户id")
+    @TableField("user_fans_followed_id")
     private Long userFansFollowedId;
 
     @ApiModelProperty(value = "关注状态(0关注 1取消)")
+    @TableField("user_fans_status")
     private Boolean userFansStatus;
 
 

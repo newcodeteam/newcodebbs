@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,9 +33,11 @@ public class TagData implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "标签id")
+    @TableField("tag_id")
     private Long tagId;
 
     @ApiModelProperty(value = "标签名称")
+    @TableField("tag_name")
     private String tagName;
 
 

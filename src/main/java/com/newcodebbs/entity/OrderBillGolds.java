@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,15 +33,19 @@ public class OrderBillGolds implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "虚拟币具体信息")
+    @TableField("bill_golds_data")
     private String billGoldsData;
 
     @ApiModelProperty(value = "管理员id,如果没有赠送事件就默认为-1")
+    @TableField("bill_golds_admin_id")
     private Integer billGoldsAdminId;
 
     @ApiModelProperty(value = "给予原因,如果没有默认就为null")
+    @TableField("bill_golds_admin_data")
     private String billGoldsAdminData;
 
 

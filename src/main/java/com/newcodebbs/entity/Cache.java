@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,9 +34,11 @@ public class Cache implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "临时数据")
+    @TableField("cache_data")
     private String cacheData;
 
     @ApiModelProperty(value = "过期时间")
+    @TableField("cache_expired_time")
     private LocalDateTime cacheExpiredTime;
 
 

@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,12 +33,15 @@ public class UserType implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "头衔昵称,多个昵称以,隔开")
+    @TableField("user_type_nickname")
     private String userTypeNickname;
 
     @ApiModelProperty(value = "权限id,默认0 游客组 无权限")
+    @TableField("user_type_id")
     private Integer userTypeId;
 
 

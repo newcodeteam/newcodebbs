@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Service
 public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, PostingsInfo> implements IPostingsInfoService {

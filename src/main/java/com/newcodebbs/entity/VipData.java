@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -17,7 +18,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,12 +34,15 @@ public class VipData implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "创建时间")
+    @TableField("create_time")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "vip状态 0为正常")
+    @TableField("vip_status")
     private Boolean vipStatus;
 
 

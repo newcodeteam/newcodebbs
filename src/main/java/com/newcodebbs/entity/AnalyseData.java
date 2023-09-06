@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,18 +33,23 @@ public class AnalyseData implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "帖子id")
+    @TableField("postings_id")
     private Long postingsId;
 
     @ApiModelProperty(value = "帖子权重")
+    @TableField("postings_weighted")
     private Integer postingsWeighted;
 
     @ApiModelProperty(value = "帖子所属标签")
+    @TableField("weighted_tag")
     private Integer weightedTag;
 
     @ApiModelProperty(value = "帖子所属板块")
+    @TableField("weighted_category")
     private Integer weightedCategory;
 
     @ApiModelProperty(value = "推荐理由")
+    @TableField("weighted_type")
     private String weightedType;
 
 

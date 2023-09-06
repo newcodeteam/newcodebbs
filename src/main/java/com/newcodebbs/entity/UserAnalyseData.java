@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,12 +33,15 @@ public class UserAnalyseData implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "用户访问的关键词id或自己自定义的关键词id,多个用，分割开")
+    @TableField("weighted_user_tag")
     private Integer weightedUserTag;
 
     @ApiModelProperty(value = "访问的板块或自己定义的板块id，多个用，分割开")
+    @TableField("weighted_user_category")
     private Integer weightedUserCategory;
 
 

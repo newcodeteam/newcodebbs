@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,15 +33,19 @@ public class OrderBillRecharge implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "充值信息")
+    @TableField("bill_recharge_info")
     private String billRechargeInfo;
 
     @ApiModelProperty(value = "充值来源")
+    @TableField("bill_recharge_addr")
     private String billRechargeAddr;
 
     @ApiModelProperty(value = "充值账单")
+    @TableField("bill_recharge_data")
     private String billRechargeData;
 
 

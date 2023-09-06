@@ -1,5 +1,6 @@
 package com.newcodebbs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -17,7 +18,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-04
+ * @since 2023-09-06
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,18 +34,23 @@ public class CommentsData implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "用户id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "帖子id")
+    @TableField("postings_id")
     private Long postingsId;
 
     @ApiModelProperty(value = "评论id")
+    @TableField("comments_id")
     private Long commentsId;
 
     @ApiModelProperty(value = "评论内容")
+    @TableField("comments_chat_text")
     private String commentsChatText;
 
     @ApiModelProperty(value = "评论时间")
+    @TableField("comments_time")
     private LocalDateTime commentsTime;
 
 
