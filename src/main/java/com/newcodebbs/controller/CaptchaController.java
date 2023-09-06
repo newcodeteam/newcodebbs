@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 图形验证码
+ * @author captcha-plus
+ * @since 2023-09-04
+ */
 @RestController
 @RequestMapping("api/captcha")
 public class CaptchaController {
