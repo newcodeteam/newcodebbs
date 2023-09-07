@@ -48,11 +48,16 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     
     
     @Override
-    public Result sendCode(String mail,HttpSession session) {
+    public Result sendCode(String mail,String session) {
         // 校验邮箱
         if (RegexUtils.isEmailInvalid(mail)) {
             //不合格
             return Result.error("邮箱格式错误");
+        }
+//        滑块验证码
+        String captchaSession = stringRedisTemplate.opsForValue().get(USER_CAPTCHA_KEY + mail);
+        if (!session.equals(captchaSession)) {
+            return Result.error("未进行滑块验证码验证");
         }
         // 生成验证码
         String code = RandomUtil.randomNumbers(6);
@@ -79,7 +84,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     }
     
     @Override
-    public Result LoginAndRegister(UserForm userForm, HttpSession session) {
+    public Result LoginAndRegister(UserForm userForm, String session) {
         String mail = userForm.getMail();
         // 校验邮箱
         if (RegexUtils.isEmailInvalid(mail)) {

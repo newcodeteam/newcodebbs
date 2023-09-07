@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -28,12 +29,14 @@ public class UserDataController {
     
     
     @PostMapping("/code")
-    public Result sendCode(@RequestParam("mail") String mail,HttpSession session) {
+    public Result sendCode(@RequestParam("mail") String mail,HttpServletRequest request) {
+        String session = request.getHeader("captcha");
         //发送邮件验证码并保存验证码
         return iUserDataService.sendCode(mail,session);
     }
     @PostMapping("/login")
-    public Result LoginAndRegister(@RequestBody UserForm userForm, HttpSession session) {
+    public Result LoginAndRegister(@RequestBody UserForm userForm, HttpServletRequest request) {
+        String session = request.getHeader("token");
         // 登陆或者注册
         return iUserDataService.LoginAndRegister(userForm,session);
     }

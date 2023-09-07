@@ -7,6 +7,8 @@ package com.newcodebbs.Constants;
 public class RedisConstants {
     public static final String USER_CODE_KEY = "user:mail:";
     public static final Long USER_CODE_TTL = 5L;
+    public static final String USER_CAPTCHA_KEY = "user:captcha:";
+    public static final Long USER_CAPTCHA_TTL = 3L;
     public static final String USER_USER_KEY = "user:token:";
     public static final Long USER_USER_TTL = 36000L;
 
