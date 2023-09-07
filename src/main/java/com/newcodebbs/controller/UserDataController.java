@@ -2,13 +2,10 @@ package com.newcodebbs.controller;
 
 
 import com.newcodebbs.dto.Result;
-import com.newcodebbs.entity.UserData;
+import com.newcodebbs.dto.UserForm;
 import com.newcodebbs.service.IUserDataService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -21,6 +18,7 @@ import javax.servlet.http.HttpSession;
  * @author shanhe
  * @since 2023-09-04
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/user")
 public class UserDataController {
@@ -28,9 +26,15 @@ public class UserDataController {
     @Resource
     private IUserDataService iUserDataService;
     
+    
     @PostMapping("/code")
-    public Result sendCode(@RequestParam("mail") String mail) {
+    public Result sendCode(@RequestParam("mail") String mail,HttpSession session) {
         //发送邮件验证码并保存验证码
-        return iUserDataService.sendCode(mail);
+        return iUserDataService.sendCode(mail,session);
+    }
+    @PostMapping("/login")
+    public Result LoginAndRegister(@RequestBody UserForm userForm, HttpSession session) {
+        // 登陆或者注册
+        return iUserDataService.LoginAndRegister(userForm,session);
     }
 }
