@@ -47,7 +47,7 @@ public class UserDataController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "{<br>\"code\":200,\"<br>msg\":\"success\",<br>\"data\":\"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyTWFpbCI6InNoYW5oZXRlc3RAcXEuY29tIiwidXNlck5pY2tuYW1lIjoic2hhbmhldGVzdEBxcS5jb20iLCJ1c2VyTmFtZSI6InVzZXJfNjgzczBubThvbyIsInVzZXJJY29uIjoxLCJ1c2VySWQiOiI2NGZjODE1MGEyMDJlYjExMDM0MmQxYjciLCJ0b2tlbiI6IjhhODcyOTNjZjQ2ZTQ5YzdhYjUxMDFjNDk1OTAwNDU4IiwiZXhwIjoxNjk0ODc0NTc2fQ.bDjUfBlAdX-Fd0ldj-tnTQGtNzOfXJwoh6y6V8S14bw\"<br>}"), @ApiResponse(code = 400, message = "失败"),
             @ApiResponse(code = 404, message = "不存在") ,@ApiResponse(code = 401, message = "缺少参数") })
     @PostMapping("/login")
-    public Result LoginAndRegister(@RequestBody UserForm userForm) {
+    public Result LoginAndRegister(@ApiParam("登陆/注册表单") @RequestBody UserForm userForm) {
         // 登陆或者注册
         return iUserDataService.LoginAndRegister(userForm);
     }
