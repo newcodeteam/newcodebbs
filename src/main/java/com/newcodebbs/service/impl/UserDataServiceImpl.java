@@ -30,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.newcodebbs.Constants.MailConstants.*;
 import static com.newcodebbs.Constants.RedisConstants.*;
+import static com.newcodebbs.Constants.ResultConstants.RESULT_CODE_ERROR;
+import static com.newcodebbs.Constants.ResultConstants.RESULT_CODE_NULL;
 import static com.newcodebbs.Constants.SqlConstants.USER_SQL_NAME;
 
 /**
@@ -61,7 +63,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 校验邮箱
         if (RegexUtils.isEmailInvalid(mail)) {
             //不合格
-            return Result.error("邮箱格式错误");
+            return Result.error(RESULT_CODE_ERROR,"邮箱格式错误");
         }
 ////        滑块验证码
 //        String captchaSession = stringRedisTemplate.opsForValue().get(USER_CAPTCHA_KEY + mail);
@@ -84,7 +86,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
             //发送邮件
             if (mailService.sendHtmlMail(to,subject,text) == -1) {
                 log.debug("邮箱有问题");
-                return Result.error("邮箱发送失败,请重新注册填写注册");
+                return Result.error(RESULT_CODE_ERROR,"邮箱发送失败,请重新注册填写注册");
             }
         }
         log.debug("发送邮箱验证码,验证码{}",code);
@@ -98,13 +100,13 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 校验邮箱
         if (RegexUtils.isEmailInvalid(mail)) {
             // 不符合
-            return Result.error("邮箱不符合");
+            return Result.error(RESULT_CODE_ERROR,"邮箱不符合");
         }
         //验证邮箱验证码是否正确
         String mailSession = stringRedisTemplate.opsForValue().get(USER_CODE_KEY + mail);
         if (mailSession == null || !mailSession.equals(userForm.getCode())) {
             // XXX 验证次数限制
-            return Result.error("邮箱验证码验证失败");
+            return Result.error(RESULT_CODE_NULL,"邮箱验证码验证失败");
         }
         //根据邮箱查询用户是否存在,如果存在就登陆,不存在则注册
         // 根据邮箱查询用户

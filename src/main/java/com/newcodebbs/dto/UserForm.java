@@ -1,13 +1,14 @@
 package com.newcodebbs.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 public class UserForm {
-//    邮箱
+    @ApiModelProperty(value = "用户邮箱",example = "shanhetest@qq.com")
     private String mail;
-//    邮箱验证码
+    @ApiModelProperty(value = "邮箱验证码",example = "123456")
     private String code;
-//    密码
+    @ApiModelProperty(value = "用户密码")
     private String password;
 }

@@ -70,4 +70,14 @@ public class Result implements Serializable {
     public static Result error(String msg){
         return new Result(RESULT_CODE_ERROR,msg,null);
     }
+    
+    /**
+     * 执行失败 返回描述
+     * @param error 失败响应码
+     * @param msg 失败描述
+     * @return 返回描述
+     */
+    public static Result error(int error,String msg){
+        return new Result(error,msg,null);
+    }
 }
