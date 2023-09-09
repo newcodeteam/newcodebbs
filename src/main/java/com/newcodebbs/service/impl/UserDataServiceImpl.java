@@ -1,7 +1,12 @@
 package com.newcodebbs.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.newcodebbs.dto.Result;
+import com.newcodebbs.dto.UserDTO;
 import com.newcodebbs.dto.UserForm;
 import com.newcodebbs.entity.UserData;
 import com.newcodebbs.mapper.UserDataMapper;
@@ -10,18 +15,22 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newcodebbs.service.MailService;
 import com.newcodebbs.utils.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.newcodebbs.Constants.MailConstants.*;
 import static com.newcodebbs.Constants.RedisConstants.*;
+import static com.newcodebbs.Constants.SqlConstants.USER_SQL_NAME;
 
 /**
  * <p>
@@ -54,11 +63,11 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
             //不合格
             return Result.error("邮箱格式错误");
         }
-//        滑块验证码
-        String captchaSession = stringRedisTemplate.opsForValue().get(USER_CAPTCHA_KEY + mail);
-        if (!session.equals(captchaSession)) {
-            return Result.error("未进行滑块验证码验证");
-        }
+////        滑块验证码
+//        String captchaSession = stringRedisTemplate.opsForValue().get(USER_CAPTCHA_KEY + mail);
+//        if (!session.equals(captchaSession)) {
+//            return Result.error("未进行滑块验证码验证");
+//        }
         // 生成验证码
         String code = RandomUtil.randomNumbers(6);
         //保存验证码进redis 五分钟过期
@@ -84,17 +93,62 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     }
     
     @Override
-    public Result LoginAndRegister(UserForm userForm, String session) {
+    public Result LoginAndRegister(UserForm userForm) {
         String mail = userForm.getMail();
         // 校验邮箱
         if (RegexUtils.isEmailInvalid(mail)) {
             // 不符合
             return Result.error("邮箱不符合");
         }
+        //验证邮箱验证码是否正确
         String mailSession = stringRedisTemplate.opsForValue().get(USER_CODE_KEY + mail);
-        String cacheCode = stringRedisTemplate.opsForValue().get(USER_CODE_KEY + mail);
-//        if (session.equals())
-        // 验证 redis 缓存的验证码是否一致
+        if (mailSession == null || !mailSession.equals(userForm.getCode())) {
+            // XXX 验证次数限制
+            return Result.error("邮箱验证码验证失败");
+        }
+        //根据邮箱查询用户是否存在,如果存在就登陆,不存在则注册
+        // 根据邮箱查询用户
+        UserData userData = query().eq("userMail",mail).one();
+        log.debug("{}",userData);
+        //判断用户存在
+        if (userData == null) {
+            // 不存在,直接创建用户
+            userData = createUserMail(mail);
+        }
+        // 保存用户信息进redis中,并生成jwt将用户基本信息与session返回给前端,同时插入mysql进行持久化处理
+        // 随机token 作为登陆令牌
+        String token = UUID.randomUUID().toString(true);
+        // 将 userData对象转为 hashmap储存
+        // 将 userData 对象的数据 转给UserDTO对象
+        UserDTO userDTO = BeanUtil.copyProperties(userData,UserDTO.class);
+        // 转为Hashmap存储
+        // 将userDTO对象转换为map对象, CopyOptions.create() 是复制一些选项
+        // setIgnoreNullValue(true) 忽略空值
+        // setFieldValueEditor 修改字段的值,用 lambda表达式将字段的值转换为字符串
+        Map<String,Object> userMap = BeanUtil.beanToMap(userDTO,new HashMap<>(),
+                CopyOptions.create().setIgnoreNullValue(true).
+                setFieldValueEditor((filedName,filedValue)->filedValue.toString()));
+        // 存入 redis token
+        String tokenKey = USER_TOKEN_KEY +token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey,userMap);
+        //设置时效 24小时
+        stringRedisTemplate.expire(tokenKey,USER_TOKEN_TTL,TimeUnit.MINUTES);
         return null;
+    }
+    
+    private UserData createUserMail(String mail) {
+        // 实例化一个user类
+        UserData userData =new UserData();
+        // 随机用户id(唯一) ObjectId是MongoDB数据库的一种唯一ID生成策略，是UUID version1的变种
+        userData.setUserId(IdUtil.objectId());
+        // 将邮箱传入
+        userData.setUserMail(mail);
+        // 随机用户名  user_10位数的随机数
+        userData.setUserName(USER_SQL_NAME + RandomUtil.randomString(10));
+        // 将昵称传入
+        userData.setUserNickname(mail);
+        // 保存用户 插入数据库
+        save(userData);
+        return userData;
     }
 }

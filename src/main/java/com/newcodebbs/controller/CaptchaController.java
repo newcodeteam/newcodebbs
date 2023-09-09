@@ -33,11 +33,15 @@ public class CaptchaController {
     @Resource
     private CaptchaService captchaService;
     
-//    @Resource
-//    private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
     
     @PostMapping("/get")
     public ResponseModel get(@RequestBody CaptchaVO data, HttpServletRequest request) {
+        String captchaId = request.getHeader("captchaId");
+//        if(captchaId !=null) {
+//            stringRedisTemplate.opsForValue().set(USER_CAPTCHA_KEY + captchaId,"1",10L, TimeUnit.SECONDS);
+//        }
 //        if (request.getHeader("captcha") != null) {
 //            log.info("验证成功{}",request.getHeader("captcha"));
 //            return null;
@@ -55,15 +59,19 @@ public class CaptchaController {
 //        }
         data.setBrowserInfo(getRemoteId(request));
         ResponseModel responseModel = captchaService.check(data);
-//        if (responseModel.getRepCode().equals("0000")) {
-//
-//            // 临时session
-//            String session = RandomUtil.randomNumbers(16);
-//            //保存临时验证进session 进redis 五分钟过期
-//            stringRedisTemplate.opsForValue().set(USER_CAPTCHA_KEY + session,session,USER_CAPTCHA_TTL, TimeUnit.MINUTES);
-//            responseModel.setRepData(session);
-//            log.debug("验证码返回了临时session:{}",responseModel);
-//        }
+        if (responseModel.getRepCode().equals("0000")) {
+            String captchaId = request.getHeader("captchaId");
+            String param = stringRedisTemplate.opsForValue().get(USER_CAPTCHA_KEY+captchaId);
+//            if (param.equals("1") || param.equals("-1")) {
+                // 临时session
+                String session = RandomUtil.randomNumbers(16);
+                //保存临时验证进session 进redis 五分钟过期
+                stringRedisTemplate.opsForValue().set(USER_CAPTCHA_KEY + captchaId,session,USER_CAPTCHA_TTL, TimeUnit.MINUTES);
+                responseModel.setRepMsg(session);
+//            }
+
+            log.debug("验证码返回了临时session:{}",responseModel);
+        }
         return responseModel;
     }
     

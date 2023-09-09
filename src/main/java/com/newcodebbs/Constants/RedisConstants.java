@@ -9,8 +9,8 @@ public class RedisConstants {
     public static final Long USER_CODE_TTL = 5L;
     public static final String USER_CAPTCHA_KEY = "user:captcha:";
     public static final Long USER_CAPTCHA_TTL = 3L;
-    public static final String USER_USER_KEY = "user:token:";
-    public static final Long USER_USER_TTL = 36000L;
+    public static final String USER_TOKEN_KEY = "user:token:";
+    public static final Long USER_TOKEN_TTL = 1440L;
 
     public static final Long CACHE_NULL_TTL = 2L;
 

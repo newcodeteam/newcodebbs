@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-06
+ * @since 2023-09-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -34,7 +34,7 @@ public class OrderBillRecharge implements Serializable {
 
     @ApiModelProperty(value = "用户id")
     @TableField("user_id")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "充值信息")
     @TableField("bill_recharge_info")

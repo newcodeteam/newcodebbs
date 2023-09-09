@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-06
+ * @since 2023-09-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -34,7 +34,7 @@ public class RecommendData implements Serializable {
 
     @ApiModelProperty(value = "操作者id")
     @TableField("user_id")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "推荐id")
     @TableField("recommend_id")

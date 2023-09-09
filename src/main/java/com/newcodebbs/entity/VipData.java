@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-06
+ * @since 2023-09-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -35,7 +35,7 @@ public class VipData implements Serializable {
 
     @ApiModelProperty(value = "用户id")
     @TableField("user_id")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "创建时间")
     @TableField("create_time")

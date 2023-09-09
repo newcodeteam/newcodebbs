@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-06
+ * @since 2023-09-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -34,7 +34,7 @@ public class UserType implements Serializable {
 
     @ApiModelProperty(value = "用户id")
     @TableField("user_id")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "头衔昵称,多个昵称以,隔开")
     @TableField("user_type_nickname")

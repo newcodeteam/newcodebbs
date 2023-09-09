@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-06
+ * @since 2023-09-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -35,7 +35,7 @@ public class UserData implements Serializable {
 
     @ApiModelProperty(value = "用户id")
     @TableField("user_id")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "账号")
     @TableField("user_name")
@@ -48,6 +48,10 @@ public class UserData implements Serializable {
     @ApiModelProperty(value = "密码")
     @TableField("user_pwd")
     private String userPwd;
+
+    @ApiModelProperty(value = "昵称")
+    @TableField("user_nickname")
+    private String userNickname;
 
     @ApiModelProperty(value = "关注数量")
     @TableField("user_concern")
@@ -72,6 +76,10 @@ public class UserData implements Serializable {
     @ApiModelProperty(value = "人民币")
     @TableField("user_rmbs")
     private Integer userRmbs;
+
+    @ApiModelProperty(value = "头像id,默认为默认头像地址")
+    @TableField("user_icon")
+    private Integer userIcon;
 
     @ApiModelProperty(value = "创建时IP")
     @TableField("user_create_ip")

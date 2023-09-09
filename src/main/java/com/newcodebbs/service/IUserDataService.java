@@ -17,5 +17,5 @@ public interface IUserDataService extends IService<UserData> {
     
     Result sendCode(String mail,String session);
     
-    Result LoginAndRegister(UserForm userForm, String session);
+    Result LoginAndRegister(UserForm userForm);
 }

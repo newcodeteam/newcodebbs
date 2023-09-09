@@ -30,14 +30,13 @@ public class UserDataController {
     
     @PostMapping("/code")
     public Result sendCode(@RequestParam("mail") String mail,HttpServletRequest request) {
-        String session = request.getHeader("captcha");
+        String session = request.getHeader("captchaSession");
         //发送邮件验证码并保存验证码
         return iUserDataService.sendCode(mail,session);
     }
     @PostMapping("/login")
-    public Result LoginAndRegister(@RequestBody UserForm userForm, HttpServletRequest request) {
-        String session = request.getHeader("token");
+    public Result LoginAndRegister(@RequestBody UserForm userForm) {
         // 登陆或者注册
-        return iUserDataService.LoginAndRegister(userForm,session);
+        return iUserDataService.LoginAndRegister(userForm);
     }
 }

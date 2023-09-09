@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-06
+ * @since 2023-09-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -36,9 +36,9 @@ public class PostingsData implements Serializable {
     @TableField("postings_id")
     private Long postingsId;
 
-    @ApiModelProperty(value = "帖子发布的id")
+    @ApiModelProperty(value = "发布帖子的用户id")
     @TableField("user_id")
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "帖子内容")
     @TableField("postings_content")

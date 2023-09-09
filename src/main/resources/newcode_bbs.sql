@@ -35,16 +35,18 @@ DROP TABLE IF EXISTS `website_data`;
 #----------------------
 CREATE TABLE `user_data`  (
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '账号',
-      `user_mail` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '邮箱',
+      `user_mail` varchar(320) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '邮箱',
       `user_pwd` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
+      `user_nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '昵称',
       `user_concern` int(3) UNSIGNED NULL DEFAULT 0 COMMENT '关注数量',
       `user_fans` int(8) UNSIGNED NULL DEFAULT 0 COMMENT '粉丝数量',
       `user_qq` char(15) NULL DEFAULT '' COMMENT 'QQ',
       `user_credits` int(11) NULL DEFAULT 0 COMMENT '积分',
       `user_golds` int(11) NULL DEFAULT 0 COMMENT '预留 虚拟币',
       `user_rmbs` int(11) NULL DEFAULT 0 COMMENT '人民币',
+      `user_icon` int(11) NULL DEFAULT 1 COMMENT '头像id,默认为默认头像地址',
       `user_create_ip` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '创建时IP',
       `user_login_ip` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '登录时IP',
       `user_article` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '文章数量',
@@ -53,8 +55,13 @@ CREATE TABLE `user_data`  (
       `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
       `login_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '登陆时间',
       PRIMARY KEY (`id`) USING BTREE,
-      UNIQUE (user_id)
+      UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '用户表';
+-- 创建前缀索引
+CREATE INDEX mail_index ON user_data (user_mail(9));
+-- 创建前缀索引
+CREATE INDEX name_index ON user_data (user_name(10));
+
 
 
 #----------------------
@@ -62,7 +69,7 @@ CREATE TABLE `user_data`  (
 #----------------------
 CREATE TABLE `user_type`  (
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `user_type_nickname` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '头衔昵称,多个昵称以,隔开',
       `user_type_id` int(3) UNSIGNED NULL DEFAULT 0 COMMENT '权限id,默认0 游客组 无权限',
       PRIMARY KEY (`id`) USING BTREE
@@ -101,7 +108,7 @@ INSERT INTO `type_group` SET user_type_id='1', type_name='管理员组', type_al
 #----------------------
 CREATE TABLE `user_fans_one`  (
      `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-     `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '粉丝id',
+     `user_id` varchar(90) NOT NULL COMMENT '粉丝id',
      `user_fans_followed_id` bigint(20) UNSIGNED NOT NULL COMMENT '关注的用户id',
      `user_fans_status` tinyint(1) DEFAULT '0' COMMENT '关注状态(0关注 1取消)',
      PRIMARY KEY (`id`) USING BTREE,
@@ -113,7 +120,7 @@ CREATE TABLE `user_fans_one`  (
 #----------------------
 CREATE TABLE `user_fans_two`  (
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '粉丝id',
+      `user_id` varchar(90) NOT NULL COMMENT '粉丝id',
       `user_fans_followed_id` bigint(20) UNSIGNED NOT NULL COMMENT '关注的用户id',
       `user_fans_status` tinyint(1) DEFAULT '0' COMMENT '关注状态(0关注 1取消)',
       PRIMARY KEY (`id`) USING BTREE,
@@ -125,12 +132,13 @@ CREATE TABLE `user_fans_two`  (
 #----------------------
 CREATE TABLE `user_chat_one`  (
      `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-     `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+     `user_id` varchar(90) NOT NULL COMMENT '用户id',
      `user_chat_id` bigint(20) UNSIGNED NOT NULL COMMENT '跟聊天者的id',
      `user_chat_text` text COMMENT '聊天内容',
      `user_chat_text_status` tinyint(1) NULL DEFAULT 0 COMMENT '是否是发送文件或者图片 0空 1文件 2图片',
      `user_chat_addr` bigint(20) NULL DEFAULT 0 COMMENT '文件或者图片id',
-     PRIMARY KEY (`id`) USING BTREE
+     PRIMARY KEY (`id`) USING BTREE,
+     UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '聊天表 < 300000 数据';
 
 #----------------------
@@ -138,12 +146,13 @@ CREATE TABLE `user_chat_one`  (
 #----------------------
 CREATE TABLE `user_chat_two`  (
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `user_chat_id` bigint(20) UNSIGNED NOT NULL COMMENT '跟聊天者的id',
       `user_chat_text` text COMMENT '聊天内容',
       `user_chat_text_status` tinyint(1) NULL DEFAULT 0 COMMENT '是否是发送文件或者图片 0空 1文件 2图片',
       `user_chat_addr` bigint(20) NULL DEFAULT 0 COMMENT '文件或者图片id',
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '聊天表 > 300000 数据';
 
 #----------------------
@@ -184,7 +193,7 @@ CREATE TABLE `tag_data`(
 #----------------------
 CREATE TABLE `recommend_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '操作者id',
+      `user_id` varchar(90) NOT NULL COMMENT '操作者id',
       `recommend_id` int(8) UNSIGNED NOT NULL COMMENT '推荐id',
       `recommend_type` int(5) UNSIGNED NOT NULL COMMENT '推荐类型id，自己定义',
       `recommend_text` text COMMENT '推荐原因',
@@ -197,10 +206,11 @@ CREATE TABLE `recommend_data`(
 #----------------------
 CREATE TABLE `vip_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
       `vip_status` tinyint(1) DEFAULT '0' COMMENT 'vip状态 0为正常',
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT 'vip表';
 
 #----------------------
@@ -208,13 +218,14 @@ CREATE TABLE `vip_data`(
 #----------------------
 CREATE TABLE `comments_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `postings_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子id',
       `comments_id` bigint(20) UNSIGNED NOT NULL COMMENT '评论id',
       `comments_chat_text` text COMMENT '评论内容',
       `comments_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
       UNIQUE KEY `comments_and_id` (`postings_id`,`comments_id`),
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (`user_id`)
 )ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '评论表';
 
 #----------------------
@@ -223,11 +234,12 @@ CREATE TABLE `comments_data`(
 CREATE TABLE `postings_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
       `postings_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子发布的id',
+      `user_id` varchar(90) NOT NULL COMMENT '发布帖子的用户id',
       `postings_content` text NOT NULL COMMENT '帖子内容',
       `postings_file_id` bigint(20) NULL DEFAULT -1 COMMENT '是否有文件 如有文件就是文件id地址 没有就是-1',
       UNIQUE (`postings_id`),
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '帖子表';
 
 #----------------------
@@ -244,7 +256,8 @@ CREATE TABLE `postings_info`(
       `postings_vip_read` tinyint(1) NULL DEFAULT 0 COMMENT '默认0 是否vip才能访问',
       `postings_vip_category_id` int(11) NOT NULL COMMENT '分类id',
       UNIQUE (`postings_id`),
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      FULLTEXT INDEX idx_content (postings_title) WITH PARSER ngram  -- 全文索引
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '帖子信息表';
 
 #----------------------
@@ -263,7 +276,7 @@ CREATE TABLE `postings_other`(
 #----------------------
 CREATE TABLE `user_analyse_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `weighted_user_tag` int(5) UNSIGNED NOT NULL COMMENT '用户访问的关键词id或自己自定义的关键词id,多个用，分割开',
       `weighted_user_category` int(5) UNSIGNED NOT NULL COMMENT '访问的板块或自己定义的板块id，多个用，分割开',
       PRIMARY KEY (`id`) USING BTREE
@@ -288,11 +301,12 @@ CREATE TABLE `analyse_data`(
 #----------------------
 CREATE TABLE `order_bill_recharge`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `bill_recharge_info` text NOT NULL COMMENT '充值信息',
       `bill_recharge_addr` text NOT NULL COMMENT '充值来源',
       `bill_recharge_data` text NOT NULL COMMENT '充值账单',
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '充值流水表';
 
 #----------------------
@@ -300,11 +314,12 @@ CREATE TABLE `order_bill_recharge`(
 #----------------------
 CREATE TABLE `order_bill_credits`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `bill_credits_data` text NOT NULL COMMENT '积分具体信息',
       `bill_credits_admin_id` int(11) NULL DEFAULT 0 COMMENT '管理员id,如果没有赠送事件就默认为-1',
       `bill_credits_admin_data` text NULL DEFAULT NULL COMMENT '给予原因,如果没有默认就为null',
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '积分流水表';
 
 #----------------------
@@ -312,11 +327,12 @@ CREATE TABLE `order_bill_credits`(
 #----------------------
 CREATE TABLE `order_bill_golds`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `bill_golds_data` text NOT NULL COMMENT '虚拟币具体信息',
       `bill_golds_admin_id` int(11) NULL DEFAULT 0 COMMENT '管理员id,如果没有赠送事件就默认为-1',
       `bill_golds_admin_data` text NULL DEFAULT NULL COMMENT '给予原因,如果没有默认就为null',
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '虚拟币流水表';
 
 #----------------------
@@ -324,9 +340,10 @@ CREATE TABLE `order_bill_golds`(
 #----------------------
 CREATE TABLE `user_token`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
-      `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id',
+      `user_id` varchar(90) NOT NULL COMMENT '用户id',
       `token_expired_time` timestamp NOT NULL COMMENT '过期时间',
-      PRIMARY KEY (`id`) USING BTREE
+      PRIMARY KEY (`id`) USING BTREE,
+      UNIQUE (`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '令牌持久化表';
 
 #----------------------
