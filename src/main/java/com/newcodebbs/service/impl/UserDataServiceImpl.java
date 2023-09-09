@@ -13,9 +13,9 @@ import com.newcodebbs.mapper.UserDataMapper;
 import com.newcodebbs.service.IUserDataService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newcodebbs.service.MailService;
+import com.newcodebbs.utils.JwtUtil;
 import com.newcodebbs.utils.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -108,7 +108,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         }
         //根据邮箱查询用户是否存在,如果存在就登陆,不存在则注册
         // 根据邮箱查询用户
-        UserData userData = query().eq("userMail",mail).one();
+        UserData userData = query().eq("user_mail",mail).one();
         log.debug("{}",userData);
         //判断用户存在
         if (userData == null) {
@@ -126,14 +126,24 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // setIgnoreNullValue(true) 忽略空值
         // setFieldValueEditor 修改字段的值,用 lambda表达式将字段的值转换为字符串
         Map<String,Object> userMap = BeanUtil.beanToMap(userDTO,new HashMap<>(),
-                CopyOptions.create().setIgnoreNullValue(true).
-                setFieldValueEditor((filedName,filedValue)->filedValue.toString()));
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
         // 存入 redis token
         String tokenKey = USER_TOKEN_KEY +token;
         stringRedisTemplate.opsForHash().putAll(tokenKey,userMap);
-        //设置时效 24小时
+        //设置时效 24小时 从redis过期
         stringRedisTemplate.expire(tokenKey,USER_TOKEN_TTL,TimeUnit.MINUTES);
-        return null;
+        // 验证完之后颁发token令牌 令牌 7天后过期
+        Map<String,Object> jwt =new HashMap<>();
+        jwt.put("userId",userData.getUserId());
+        jwt.put("userName",userData.getUserName());
+        jwt.put("userMail",userData.getUserMail());
+        jwt.put("userNickname",userData.getUserNickname());
+        jwt.put("userIcon",userData.getUserIcon());
+        jwt.put("token",token);
+        String JwtToken = JwtUtil.generateJwt(jwt);
+        return Result.success(JwtToken);
     }
     
     private UserData createUserMail(String mail) {
@@ -141,6 +151,10 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         UserData userData =new UserData();
         // 随机用户id(唯一) ObjectId是MongoDB数据库的一种唯一ID生成策略，是UUID version1的变种
         userData.setUserId(IdUtil.objectId());
+        // 随机密码 (用户注册成功后会提示更改)
+        userData.setUserPwd(RandomUtil.randomNumbers(10));
+        // 设置默认头像
+        userData.setUserIcon(1);
         // 将邮箱传入
         userData.setUserMail(mail);
         // 随机用户名  user_10位数的随机数

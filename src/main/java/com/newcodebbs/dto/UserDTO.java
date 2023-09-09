@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class UserDTO {
     @ApiModelProperty(value = "用户id")
-    private Long userId;
+    private String userId;
     @ApiModelProperty(value = "用户账号")
     private String userName;
     @ApiModelProperty(value = "用户邮箱")
