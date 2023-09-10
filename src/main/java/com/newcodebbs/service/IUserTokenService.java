@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-09-06
  */
 public interface IUserTokenService extends IService<UserToken> {
-
+    void createToken(UserToken userToken);
 }

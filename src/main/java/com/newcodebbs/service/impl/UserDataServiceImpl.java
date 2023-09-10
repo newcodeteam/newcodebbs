@@ -9,11 +9,14 @@ import com.newcodebbs.dto.Result;
 import com.newcodebbs.dto.UserDTO;
 import com.newcodebbs.dto.UserForm;
 import com.newcodebbs.entity.UserData;
+import com.newcodebbs.entity.UserToken;
 import com.newcodebbs.mapper.UserDataMapper;
 import com.newcodebbs.service.IUserDataService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.newcodebbs.service.IUserTokenService;
 import com.newcodebbs.service.MailService;
 import com.newcodebbs.utils.JwtUtil;
+import com.newcodebbs.utils.LocalDateTimeUtil;
 import com.newcodebbs.utils.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -55,6 +61,9 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     //邮箱
     @Autowired
     private MailService mailService;
+    
+    @Resource
+    private IUserTokenService iUserTokenService;
     
     
     
@@ -145,7 +154,18 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         jwt.put("userIcon",userData.getUserIcon());
         jwt.put("token",token);
         String JwtToken = JwtUtil.generateJwt(jwt);
+        //设置过期时间
+        LocalDateTime localDateTime =  LocalDateTimeUtil.localDateTime(LocalDateTimeUtil.expireTime(new Date()));
+        // 创建Token实体类 并构造参数
+        UserToken userToken = new UserToken(userData.getUserId(),localDateTime);
+        // 调用 Token服务类保存token持久化
+        iUserTokenService.createToken(userToken);
         return Result.success(JwtToken);
+    }
+    
+    @Override
+    public Result logout(String userId) {
+        return null;
     }
     
     private UserData createUserMail(String mail) {

@@ -4,6 +4,7 @@ package com.newcodebbs.controller;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.newcodebbs.dto.Result;
+import com.newcodebbs.dto.UserDTO;
 import com.newcodebbs.dto.UserForm;
 import com.newcodebbs.service.IUserDataService;
 import io.swagger.annotations.*;
@@ -50,5 +51,13 @@ public class UserDataController {
     public Result LoginAndRegister(@ApiParam("登陆/注册表单") @RequestBody UserForm userForm) {
         // 登陆或者注册
         return iUserDataService.LoginAndRegister(userForm);
+    }
+    @ApiOperation(value = "用户登出")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "{<br>\"code\":200,\"<br>msg\":\"成功退出系统\",<br>\"data\":\"null\"<br>}"), @ApiResponse(code = 400, message = "失败"),
+            @ApiResponse(code = 404, message = "不存在") ,@ApiResponse(code = 401, message = "缺少参数") })
+    @PostMapping("logout")
+    public Result Logout(@ApiParam("用户数据") @RequestParam("userId") String userId) {
+        // 用户登出
+        return iUserDataService.logout(userId);
     }
 }

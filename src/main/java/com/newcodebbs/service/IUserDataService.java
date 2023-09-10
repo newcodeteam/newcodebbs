@@ -18,4 +18,6 @@ public interface IUserDataService extends IService<UserData> {
     Result sendCode(String mail,String session);
     
     Result LoginAndRegister(UserForm userForm);
+    
+    Result logout(String userId);
 }
