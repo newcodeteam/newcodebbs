@@ -33,7 +33,7 @@ public class UserTokenServiceImpl extends ServiceImpl<UserTokenMapper, UserToken
 //        log.info("{}",userToken);
 //        // 如果没有这个数据,那就添加token
 //        if (userToken == null) {
-//            save(userTokens);
+            save(userTokens);
 ////            return;
 //        }
 //        // 如果有,那就更新时间

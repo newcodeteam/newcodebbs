@@ -3,6 +3,7 @@ package com.newcodebbs.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.newcodebbs.dto.ChatDTO;
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.dto.UserDTO;
 import com.newcodebbs.dto.UserForm;
@@ -60,4 +61,30 @@ public class UserDataController {
         // 用户登出
         return iUserDataService.logout(userId);
     }
+
+    @PostMapping("followed")
+    public Result followed(@ApiParam("我的ID") @RequestParam("myUserId") String myUserId,
+                           @ApiParam("需要关注的ID") @RequestParam("userId") String userId){
+        // todo 关注用户
+        return iUserDataService.followed(myUserId,userId);
+    }
+
+   @PostMapping("followedAll")
+   public Result followedAll(@RequestParam("userId") String userID) {
+        // todo 查看所有关注的用户 分页查询
+        return null;
+   }
+
+   @PostMapping("cancelFollowed")
+   public Result cancelFollowed(@ApiParam("我的ID") @RequestParam("myUserId") String myUserId,
+             @ApiParam("需要取消关注的ID") @RequestParam("userId") String userId) {
+        // todo 取消关注用户
+       return iUserDataService.cancelFollowed(myUserId,userId);
+   }
+
+   @PostMapping("chat")
+   public Result chat(@RequestBody ChatDTO chatDTO) {
+        // todo 聊天信息
+       return null;
+   }
 }

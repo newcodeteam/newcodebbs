@@ -42,7 +42,6 @@ public class UserToken implements Serializable {
 
     @ApiModelProperty(value = "过期时间")
     @TableField("token_expired_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime tokenExpiredTime;
     
     public UserToken(String userId, LocalDateTime tokenExpiredTime) {

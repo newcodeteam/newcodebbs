@@ -14,7 +14,7 @@ public class JwtUtil {
     //    签名密钥
     private static String signKey = "new%code@bbs";
     //    过期时间 毫秒 换算就是 24小时
-    private static Long expire = 604800000L;
+    private static Long expire = 86400000L;
     
     /**
      * 生成JWT令牌

@@ -20,4 +20,8 @@ public interface IUserDataService extends IService<UserData> {
     Result LoginAndRegister(UserForm userForm);
     
     Result logout(String userId);
+    
+    Result followed(String myUserId, String userId);
+    
+    Result cancelFollowed(String myUserId, String userId);
 }
