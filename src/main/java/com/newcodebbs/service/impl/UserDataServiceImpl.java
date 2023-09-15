@@ -153,10 +153,9 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         jwt.put("userIcon",userData.getUserIcon());
         jwt.put("token",token);
         String JwtToken = JwtUtil.generateJwt(jwt);
-        //设置过期时间
-        LocalDateTime localDateTime =  LocalDateTimeUtil.localDateTime(LocalDateTimeUtil.expireTime(new Date()));
+       
         // 创建Token实体类 并构造参数
-        UserToken userToken = new UserToken(userData.getUserId(),localDateTime);
+        UserToken userToken = new UserToken(userData.getUserId(),LocalDateTimeUtil.localDateTime());
         // 调用 Token服务类保存token持久化
         iUserTokenService.createToken(userToken);
         return Result.success(JwtToken);

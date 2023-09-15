@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -13,8 +14,8 @@ import java.util.Map;
 public class JwtUtil {
     //    签名密钥
     private static String signKey = "new%code@bbs";
-    //    过期时间 毫秒 换算就是 24小时
-    private static Long expire = 86400000L;
+//    //    过期时间 毫秒 换算就是 24小时
+//    private static Long expire = 86400000L;
     
     /**
      * 生成JWT令牌
@@ -25,7 +26,7 @@ public class JwtUtil {
         String jwt = Jwts.builder()
                 .addClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, signKey)
-                .setExpiration(new Date(System.currentTimeMillis() + expire))
+                .setExpiration(new Date(System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000)))
                 .compact();
         return jwt;
     }

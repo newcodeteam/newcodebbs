@@ -48,4 +48,5 @@ public class UserToken implements Serializable {
         this.userId = userId;
         this.tokenExpiredTime = tokenExpiredTime;
     }
+    public UserToken(){}
 }
