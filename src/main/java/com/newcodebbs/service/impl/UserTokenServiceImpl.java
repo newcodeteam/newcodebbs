@@ -26,14 +26,14 @@ public class UserTokenServiceImpl extends ServiceImpl<UserTokenMapper, UserToken
     private UserTokenMapper userTokenMapper;
     @Override
     public void createToken(UserToken userTokens) {
-        // todo 待更新
+        // todo 待更新 save问题
 //        QueryWrapper<UserToken> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.eq("user_id",userTokens.getUserId());
 //        UserToken userToken = userTokenMapper.selectOne(queryWrapper);
 //        log.info("{}",userToken);
 //        // 如果没有这个数据,那就添加token
 //        if (userToken == null) {
-            save(userTokens);
+//            save(userTokens);
 ////            return;
 //        }
 //        // 如果有,那就更新时间
