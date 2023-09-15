@@ -2,6 +2,7 @@ package com.newcodebbs.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.injector.methods.SelectById;
+import com.newcodebbs.entity.UserData;
 import com.newcodebbs.entity.UserToken;
 import com.newcodebbs.mapper.UserTokenMapper;
 import com.newcodebbs.service.IUserTokenService;
@@ -26,18 +27,16 @@ public class UserTokenServiceImpl extends ServiceImpl<UserTokenMapper, UserToken
     private UserTokenMapper userTokenMapper;
     @Override
     public void createToken(UserToken userTokens) {
-        // todo 待更新 save问题
-//        QueryWrapper<UserToken> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("user_id",userTokens.getUserId());
-//        UserToken userToken = userTokenMapper.selectOne(queryWrapper);
-//        log.info("{}",userToken);
-//        // 如果没有这个数据,那就添加token
-//        if (userToken == null) {
-//            save(userTokens);
-////            return;
-//        }
-//        // 如果有,那就更新时间
-////        userTokenMapper.update(userTokens,queryWrapper);
-//        log.info("{}",userToken);
+        
+        UserToken userToken = query().eq("user_id",userTokens.getUserId()).one();
+        log.info("{}",userToken);
+        // 如果没有这个数据,那就添加token
+        if (userToken == null) {
+            save(userTokens);
+            return;
+        }
+        // 如果有,那就更新时间
+        userTokenMapper.updateById(userToken);
+        log.info("{}",userToken);
     }
 }
