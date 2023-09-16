@@ -110,6 +110,10 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
             // 不符合
             return Result.error(RESULT_CODE_ERROR,"邮箱不符合");
         }
+        //检测是否携带了验证码
+        if (userForm.getCode() == null && userForm.getCode().length() != 6) {
+            return Result.error("没有填验证码");
+        }
         //验证邮箱验证码是否正确
         String mailSession = stringRedisTemplate.opsForValue().get(USER_CODE_KEY + mail);
         if (mailSession == null || !mailSession.equals(userForm.getCode())) {
@@ -122,8 +126,13 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         log.debug("{}",userData);
         //判断用户存在
         if (userData == null) {
-            // 不存在,直接创建用户
+            // 不存在,直接创建用户 todo 邮箱验证发送注册验证 填密码
             userData = createUserMail(mail);
+            return Result.Register("注册成功,请从邮箱进行验证");
+        }
+        //存在,判断是否注册验证通过或已被封禁 0是false
+        if (userData.getUserStatus()) {
+            return Result.error("账号未通过注册验证或已被封禁");
         }
         // 保存用户信息进redis中,并生成jwt将用户基本信息与session返回给前端,同时插入mysql进行持久化处理
         // 随机token 作为登陆令牌
@@ -194,5 +203,10 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 保存用户 插入数据库
         save(userData);
         return userData;
+    }
+    
+    private int sendRegisterURL(){
+        //todo 邮箱验证
+        return -1;
     }
 }

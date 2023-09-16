@@ -44,6 +44,14 @@ public class Result implements Serializable {
     }
     
     /**
+     * 注册成功
+     * @param msg 返回描述
+     * @return
+     */
+    public static Result Register(String msg) {
+        return new Result(RESULT_REGISTER_TRUE,"success",msg);
+    }
+    /**
      * 执行成功并返回值和描述
      * @param msg 返回描述
      * @param data 返回的内容

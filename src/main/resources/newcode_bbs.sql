@@ -51,7 +51,7 @@ CREATE TABLE `user_data`  (
       `user_login_ip` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '登录时IP',
       `user_article` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '文章数量',
       `user_comments` int(10) UNSIGNED NULL DEFAULT 0 COMMENT '评论数量',
-      `user_status` tinyint(1) DEFAULT 0 COMMENT '用户是否封禁 0 正常',
+      `user_status` tinyint(1) DEFAULT 0 COMMENT '用户是否封禁 0 封禁',
       `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
       `login_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '登陆时间',
       PRIMARY KEY (`id`) USING BTREE,
