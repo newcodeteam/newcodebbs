@@ -222,8 +222,17 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 发送主题
         String subject = MAIL_TITLE;
         // 发送内容 域名地址/redis地址/邮箱
-        String text = MAIL_REGISTER_HEAD+"<h2>"+domain+"/"+sessionId+"/"+userData.getUserMail()+"<h2>30分钟后过期,请您尽快验证</p>";
-        // todo redis 存入临时数据 还有验证控制器 保存用户
+        String text = MAIL_REGISTER_HEAD+"<h2>"+domain+"/api/user/"+sessionId+"/"+userData.getUserMail()+"<h2>30分钟后过期,请您尽快验证</p>";
+        //  存入临时数据 保存临时用户数据
+        Map<String,Object> userMap = BeanUtil.beanToMap(userData,new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
+        // 存入 redis token
+        String tokenKey = USER_EMAIL_USER_KEY +sessionId;
+        stringRedisTemplate.opsForHash().putAll(tokenKey,userMap);
+        //设置时效 30分钟 从redis过期
+        stringRedisTemplate.expire(tokenKey,USER_EMAIL_TTL,TimeUnit.MINUTES);
         //发送验证路径 请在配置文件确认 是否开启了邮箱验证
         if (this.emailIF) {
             log.debug("邮件信息,邮件:{},标题:{},内容:{}",to,subject,text);
@@ -236,5 +245,15 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         //不发送邮箱就控制台提示
         log.debug("控制台邮件信息,邮件:{},标题:{},内容:{}",to,subject,text);
         return 1;
+    }
+    @Override
+    public Result RegisterMail(String redisID, String mail, String password) {
+        //验证是否有这个用户 todo 待完成
+//        String mailSession = stringRedisTemplate.opsForValue().get(USER_EMAIL_USER_KEY + redisID);
+//        if (mailSession == null) {
+//            // 是否过期
+//            return Result.error(RESULT_CODE_NULL,"注册时间已经过期,请重新注册");
+//        }
+        return null;
     }
 }

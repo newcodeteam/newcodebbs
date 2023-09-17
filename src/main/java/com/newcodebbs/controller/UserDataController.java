@@ -54,6 +54,12 @@ public class UserDataController {
         // 登陆或者注册
         return iUserDataService.LoginAndRegister(userForm);
     }
+    @PostMapping("/{uuid}/{mail}")
+    public Result RegisterMail(@ApiParam("redis临时id") @PathVariable String uuid,@ApiParam("邮箱") @PathVariable String mail,
+                               @ApiParam("密码") @RequestParam("password") String password) {
+        // 注册用户校验,输入密码完成注册
+        return iUserDataService.RegisterMail(uuid,mail,password);
+    }
     @ApiOperation(value = "用户登出")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "{<br>\"code\":200,\"<br>msg\":\"成功退出系统\",<br>\"data\":\"null\"<br>}"), @ApiResponse(code = 400, message = "失败"),
             @ApiResponse(code = 404, message = "不存在") ,@ApiResponse(code = 401, message = "缺少参数") })
