@@ -27,8 +27,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +61,9 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     
     @Resource
     private IUserTokenService iUserTokenService;
+    
+    @Value("${domain.name}")
+    private String domain;
     
     
     
@@ -126,9 +127,11 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         log.debug("{}",userData);
         //判断用户存在
         if (userData == null) {
-            // 不存在,直接创建用户 todo 邮箱验证发送注册验证 填密码
-            userData = createUserMail(mail);
-            return Result.Register("注册成功,请从邮箱进行验证");
+            // 不存在,直接创建用户  邮箱验证发送注册验证 填密码
+            if (createUserMail(mail) !=null){
+                return Result.Register("注册成功,请从邮箱点击链接进行验证");
+            }
+            return Result.error("注册失败,邮箱错误");
         }
         //存在,判断是否注册验证通过或已被封禁 0是false
         if (userData.getUserStatus()) {
@@ -200,13 +203,38 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         userData.setUserName(USER_SQL_NAME + RandomUtil.randomString(10));
         // 将昵称传入
         userData.setUserNickname(mail);
-        // 保存用户 插入数据库
-        save(userData);
-        return userData;
+//        // 保存用户 插入数据库 通过邮箱验证不直接插入数据库
+//        save(userData);
+        if (sendRegisterURL(userData) == 1) {
+            //成功
+            return userData;
+        } else {
+            //失败
+            return null;
+        }
     }
     
-    private int sendRegisterURL(){
-        //todo 邮箱验证
-        return -1;
+    private int sendRegisterURL(UserData userData){
+        // redis 临时id
+        String sessionId = IdUtil.objectId();
+        // 需要发送的邮箱
+        String to = userData.getUserMail();
+        // 发送主题
+        String subject = MAIL_TITLE;
+        // 发送内容 域名地址/redis地址/邮箱
+        String text = MAIL_REGISTER_HEAD+"<h2>"+domain+"/"+sessionId+"/"+userData.getUserMail()+"<h2>30分钟后过期,请您尽快验证</p>";
+        // todo redis 存入临时数据 还有验证控制器 保存用户
+        //发送验证路径 请在配置文件确认 是否开启了邮箱验证
+        if (this.emailIF) {
+            log.debug("邮件信息,邮件:{},标题:{},内容:{}",to,subject,text);
+            //发送邮件
+            if (mailService.sendHtmlMail(to,subject,text) == -1) {
+                log.debug("邮箱有问题");
+                return -1;
+            }
+        }
+        //不发送邮箱就控制台提示
+        log.debug("控制台邮件信息,邮件:{},标题:{},内容:{}",to,subject,text);
+        return 1;
     }
 }
