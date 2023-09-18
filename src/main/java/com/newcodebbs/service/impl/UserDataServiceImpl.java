@@ -16,10 +16,7 @@ import com.newcodebbs.service.IUserDataService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newcodebbs.service.IUserTokenService;
 import com.newcodebbs.service.MailService;
-import com.newcodebbs.utils.DataUtil;
-import com.newcodebbs.utils.JwtUtil;
-import com.newcodebbs.utils.LocalDateTimeUtil;
-import com.newcodebbs.utils.RegexUtils;
+import com.newcodebbs.utils.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +90,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
             // 发送主题
             String subject = MAIL_NAME;
             // 发送内容
-            String text = MAIL_CONTENT+"<h2>"+code+"<h2>五分钟后过期,请您尽快验证</p>";
+            String text = MAIL_CONTENT+"<h2>"+code+"</h2>五分钟后过期,请您尽快验证</p>";
             log.debug("邮件信息,邮件:{},标题:{},内容:{}",to,subject,text);
             //发送邮件
             if (mailService.sendHtmlMail(to,subject,text) == -1) {
@@ -138,7 +135,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
             return Result.error("注册失败,邮箱错误");
         }
         //存在,判断是否注册验证通过或已被封禁 0是false
-        if (userData.getUserStatus()) {
+        if (!userData.getUserStatus()) {
             return Result.error("账号未通过注册验证或已被封禁");
         }
         // 保存用户信息进redis中,并生成jwt将用户基本信息与session返回给前端,同时插入mysql进行持久化处理
@@ -200,7 +197,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 随机密码 (用户注册成功后会提示更改)
         userData.setUserPwd(RandomUtil.randomNumbers(10));
         // 设置默认头像
-        userData.setUserIcon(1);
+//        userData.setUserIcon(1);
         // 将邮箱传入
         userData.setUserMail(mail);
         // 随机用户名  user_10位数的随机数
@@ -226,16 +223,18 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 发送主题
         String subject = MAIL_TITLE;
         // 发送内容 域名地址/redis地址/邮箱
-        String text = MAIL_REGISTER_HEAD+"<h2>"+domain+"/api/user/"+sessionId+"/"+userData.getUserMail()+"<h2>30分钟后过期,请您尽快验证</p>";
+        String text = MAIL_REGISTER_HEAD+"<h2>"+domain+"/api/user/"+sessionId+"/"+userData.getUserMail()+"</h2>30分钟后过期,请您尽快验证</p>";
         Map<String, Object> map = MapUtil.newHashMap();
         //  存入临时数据 保存临时用户数据 todo bug
-        Map<String,Object> userMap = BeanUtil.beanToMap(userData,map,
-                CopyOptions.create()
-                        .setIgnoreNullValue(true)
-                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
+        map.put("userId",userData.getUserId());
+        map.put("userName",userData.getUserName());
+        map.put("userMail",userData.getUserMail());
+        map.put("userNickname",userData.getUserNickname());
+        map.put("userPwd",userData.getUserPwd());
+//        map.put("userIcon",(String) ((Object) userData.getUserIcon()));
         // 存入 redis token
         String tokenKey = USER_EMAIL_USER_KEY +sessionId;
-        stringRedisTemplate.opsForHash().putAll(tokenKey,userMap);
+        stringRedisTemplate.opsForHash().putAll(tokenKey,map);
         //设置时效 30分钟 从redis过期
         stringRedisTemplate.expire(tokenKey,USER_EMAIL_TTL,TimeUnit.MINUTES);
         //发送验证路径 请在配置文件确认 是否开启了邮箱验证
@@ -267,9 +266,76 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
             return Result.error("密码不正确,请输入8-16位的密码,并且要包含字母和数字");
         }
         // 更改密码
-        userData.setUserPwd(password);
+        userData.setUserPwd(MD5Util.Md5Code(password));
+        //更改状态
+        userData.setUserStatus(true);
         //保存进数据库
         save(userData);
+        //删除数据库临时信息
+        stringRedisTemplate.delete(key);
         return Result.success("注册成功");
+    }
+    
+    @Override
+    public Result Login(UserForm userForm) {
+        String mail = userForm.getMail();
+        String password = userForm.getPassword();
+        // 校验邮箱
+        if (RegexUtils.isEmailInvalid(mail)) {
+            // 不符合
+            return Result.error(RESULT_CODE_ERROR,"邮箱不符合");
+        }
+        if (!DataUtil.PatternData(password,DataUtil.PASSWORD_PATTERN)) {
+            return Result.error("密码不规范,请输入8-16位的密码,并且要包含字母和数字");
+        }
+        // 根据邮箱查询用户
+        UserData userData = query().eq("user_mail",mail).one();
+        //判断用户存在
+        if (userData == null) {
+            //用户不存在
+            return Result.error("用户不存在或账号密码错误");
+        }
+        if (!userData.getUserPwd().equals(MD5Util.Md5Code(password))) {
+            //用户不存在
+            return Result.error("用户不存在或账号密码错误");
+        }
+        //存在,判断是否注册验证通过或已被封禁 0是false
+        if (!userData.getUserStatus()) {
+            return Result.error("账号已被封禁");
+        }
+        // 保存用户信息进redis中,并生成jwt将用户基本信息与session返回给前端,同时插入mysql进行持久化处理
+        // 随机token 作为登陆令牌
+        String token = UUID.randomUUID().toString(true);
+        // 将 userData对象转为 hashmap储存
+        // 将 userData 对象的数据 转给UserDTO对象
+        UserDTO userDTO = BeanUtil.copyProperties(userData,UserDTO.class);
+        // 转为Hashmap存储
+        // 将userDTO对象转换为map对象, CopyOptions.create() 是复制一些选项
+        // setIgnoreNullValue(true) 忽略空值
+        // setFieldValueEditor 修改字段的值,用 lambda表达式将字段的值转换为字符串
+        Map<String,Object> userMap = BeanUtil.beanToMap(userDTO,new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
+        // 存入 redis token
+        String tokenKey = USER_TOKEN_KEY +token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey,userMap);
+        //设置时效 24小时 从redis过期
+        stringRedisTemplate.expire(tokenKey,USER_TOKEN_TTL,TimeUnit.MINUTES);
+        // 验证完之后颁发token令牌 令牌 7天后过期
+        Map<String,Object> jwt =new HashMap<>();
+        jwt.put("userId",userData.getUserId());
+        jwt.put("userName",userData.getUserName());
+        jwt.put("userMail",userData.getUserMail());
+        jwt.put("userNickname",userData.getUserNickname());
+        jwt.put("userIcon",userData.getUserIcon());
+        jwt.put("token",token);
+        String JwtToken = JwtUtil.generateJwt(jwt);
+    
+        // 创建Token实体类 并构造参数
+        UserToken userToken = new UserToken(userData.getUserId(),LocalDateTimeUtil.localDateTime());
+        // 调用 Token服务类保存token持久化
+        iUserTokenService.createToken(userToken);
+        return Result.success(JwtToken);
     }
 }

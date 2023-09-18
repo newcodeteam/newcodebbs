@@ -47,19 +47,29 @@ public class UserDataController {
     }
     @ApiOperation(value = "通过验证码注册和登陆")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "{<br>\"code\":200,\"<br>msg\":\"success\",<br>\"data\":\"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyTWFpbCI6InNoYW5oZXRlc3RAcXEuY29tIiwidXNlck5pY2tuYW1lIjoic2hhbmhldGVzdEBxcS5jb20iLCJ1c2VyTmFtZSI6InVzZXJfNjgzczBubThvbyIsInVzZXJJY29uIjoxLCJ1c2VySWQiOiI2NGZjODE1MGEyMDJlYjExMDM0MmQxYjciLCJ0b2tlbiI6IjhhODcyOTNjZjQ2ZTQ5YzdhYjUxMDFjNDk1OTAwNDU4IiwiZXhwIjoxNjk0ODc0NTc2fQ.bDjUfBlAdX-Fd0ldj-tnTQGtNzOfXJwoh6y6V8S14bw\"<br>}"), @ApiResponse(code = 400, message = "失败"),
-            @ApiResponse(code = 200, message = "{<br>\"code\":201,\"<br>msg\":\"注册成功,请在邮箱点击链接完成注册\",<br>\"data\":\"null\"<br>}"), @ApiResponse(code = 400, message = "失败"),
-            @ApiResponse(code = 404, message = "不存在") ,@ApiResponse(code = 401, message = "缺少参数") })
-    @PostMapping("/login")
+                  @ApiResponse(code = 404, message = "不存在") ,@ApiResponse(code = 401, message = "缺少参数") })
+    @PostMapping("/loginMail")
     public Result LoginAndRegister(@ApiParam("登陆/注册表单") @RequestBody UserForm userForm) {
         // 登陆或者注册
         return iUserDataService.LoginAndRegister(userForm);
     }
+    @ApiOperation(value = "注册之后的注册验证,并且设置密码")
     @PostMapping("/{uuid}/{mail}")
     public Result RegisterMail(@ApiParam("redis临时id") @PathVariable String uuid,@ApiParam("邮箱") @PathVariable String mail,
                                @ApiParam("密码") @RequestParam("password") String password) {
         // 注册用户校验,输入密码完成注册
         return iUserDataService.RegisterMail(uuid,mail,password);
     }
+    @ApiOperation(value = "通过账号密码登陆")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "{<br>\"code\":200,\"<br>msg\":\"success\",<br>\"data\":\"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyTWFpbCI6InNoYW5oZXRlc3RAcXEuY29tIiwidXNlck5pY2tuYW1lIjoic2hhbmhldGVzdEBxcS5jb20iLCJ1c2VyTmFtZSI6InVzZXJfNjgzczBubThvbyIsInVzZXJJY29uIjoxLCJ1c2VySWQiOiI2NGZjODE1MGEyMDJlYjExMDM0MmQxYjciLCJ0b2tlbiI6IjhhODcyOTNjZjQ2ZTQ5YzdhYjUxMDFjNDk1OTAwNDU4IiwiZXhwIjoxNjk0ODc0NTc2fQ.bDjUfBlAdX-Fd0ldj-tnTQGtNzOfXJwoh6y6V8S14bw\"<br>}"), @ApiResponse(code = 400, message = "失败"),
+            @ApiResponse(code = 200, message = "{<br>\"code\":201,\"<br>msg\":\"注册成功,请在邮箱点击链接完成注册\",<br>\"data\":\"null\"<br>}"), @ApiResponse(code = 400, message = "失败"),
+            @ApiResponse(code = 404, message = "不存在") ,@ApiResponse(code = 401, message = "缺少参数") })
+    @PostMapping("/login")
+    public Result Login(@ApiParam("登陆表单") @RequestBody UserForm userForm) {
+        // 用户登陆校验,输入账号密码完成登陆
+        return iUserDataService.Login(userForm);
+    }
+    
     @ApiOperation(value = "用户登出")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "{<br>\"code\":200,\"<br>msg\":\"成功退出系统\",<br>\"data\":\"null\"<br>}"), @ApiResponse(code = 400, message = "失败"),
             @ApiResponse(code = 404, message = "不存在") ,@ApiResponse(code = 401, message = "缺少参数") })

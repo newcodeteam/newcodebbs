@@ -26,4 +26,6 @@ public interface IUserDataService extends IService<UserData> {
     Result cancelFollowed(String myUserId, String userId);
     
     Result RegisterMail(String redisID,String mail,String password);
+    
+    Result Login(UserForm userForm);
 }
