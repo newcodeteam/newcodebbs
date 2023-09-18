@@ -15,9 +15,11 @@ import com.newcodebbs.service.IUserDataService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newcodebbs.service.IUserTokenService;
 import com.newcodebbs.service.MailService;
+import com.newcodebbs.utils.DataUtil;
 import com.newcodebbs.utils.JwtUtil;
 import com.newcodebbs.utils.LocalDateTimeUtil;
 import com.newcodebbs.utils.RegexUtils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -248,12 +250,23 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     }
     @Override
     public Result RegisterMail(String redisID, String mail, String password) {
-        //验证是否有这个用户 todo 待完成
-//        String mailSession = stringRedisTemplate.opsForValue().get(USER_EMAIL_USER_KEY + redisID);
-//        if (mailSession == null) {
-//            // 是否过期
-//            return Result.error(RESULT_CODE_NULL,"注册时间已经过期,请重新注册");
-//        }
-        return null;
+        //验证是否有这个用户
+        //临时用户数据地址
+        String key = USER_EMAIL_USER_KEY + redisID;
+        Map<Object, Object> userMap = stringRedisTemplate.opsForHash().entries(key);
+        // 判断用户是否存在
+        if (userMap.isEmpty()) {
+            return Result.error(RESULT_CODE_NULL,"注册时间已经过期,请重新注册");
+        }
+        // 将查询到的hash数据转为Userdata
+        UserData userData = BeanUtil.fillBeanWithMap(userMap, new UserData(), false);
+        if (!DataUtil.PatternData(password,DataUtil.PASSWORD_PATTERN)) {
+            return Result.error("密码不正确,请输入8-16位的密码,并且要包含字母和数字");
+        }
+        // 更改密码
+        userData.setUserPwd(password);
+        //保存进数据库
+        save(userData);
+        return Result.success("注册成功");
     }
 }
