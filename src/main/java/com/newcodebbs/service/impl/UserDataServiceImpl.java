@@ -3,6 +3,7 @@ package com.newcodebbs.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.newcodebbs.dto.Result;
@@ -129,6 +130,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         log.debug("{}",userData);
         //判断用户存在
         if (userData == null) {
+            log.info("test");
             // 不存在,直接创建用户  邮箱验证发送注册验证 填密码
             if (createUserMail(mail) !=null){
                 return Result.Register("注册成功,请从邮箱点击链接进行验证");
@@ -225,8 +227,9 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         String subject = MAIL_TITLE;
         // 发送内容 域名地址/redis地址/邮箱
         String text = MAIL_REGISTER_HEAD+"<h2>"+domain+"/api/user/"+sessionId+"/"+userData.getUserMail()+"<h2>30分钟后过期,请您尽快验证</p>";
-        //  存入临时数据 保存临时用户数据
-        Map<String,Object> userMap = BeanUtil.beanToMap(userData,new HashMap<>(),
+        Map<String, Object> map = MapUtil.newHashMap();
+        //  存入临时数据 保存临时用户数据 todo bug
+        Map<String,Object> userMap = BeanUtil.beanToMap(userData,map,
                 CopyOptions.create()
                         .setIgnoreNullValue(true)
                         .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));

@@ -35,7 +35,7 @@ public class RedissonConfig {
         // 配置
         Config config = new Config();
 //        配置redis的账号密码
-        if (redisPassword.equals("null")) {
+        if (!redisPassword.equals("null")) {
             config.useSingleServer().setAddress("redis://"+redisAddr+":"+redisPort).setPassword(redisPassword);
         } else {
             config.useSingleServer().setAddress("redis://"+redisAddr+":"+redisPort);
