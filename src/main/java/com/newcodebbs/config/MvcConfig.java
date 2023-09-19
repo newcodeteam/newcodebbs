@@ -1,5 +1,6 @@
 package com.newcodebbs.config;
 
+import com.newcodebbs.interceptor.AutoInterceptor;
 import com.newcodebbs.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,19 +32,16 @@ public class MvcConfig implements WebMvcConfigurer {
     
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        String[] excludePatterns = new String[]{"/api/user/**","/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/api", "/api-docs", "/api-docs/**", "/doc.html/**"};
         // 登录拦截器
         registry.addInterceptor(new LoginInterceptor())
                 .excludePathPatterns(
-                        "/shop/**",
-                        "/voucher/**",
-                        "/shop-type/**",
-                        "/upload/**",
-                        "/blog/hot",
-                        "/user/code",
-                        "/user/login"
+                        excludePatterns
                 ).order(1);
-        // token刷新的拦截器
-//        registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate)).addPathPatterns("/**").order(0);
+//         token刷新的拦截器
+        registry.addInterceptor(new AutoInterceptor(stringRedisTemplate)).addPathPatterns("/**").excludePathPatterns(
+                excludePatterns
+        ).order(0);
     }
     
     /**
@@ -53,7 +51,7 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        registry.addResourceHandler("/home/**").addResourceLocations("classpath:/web/");
-        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
     

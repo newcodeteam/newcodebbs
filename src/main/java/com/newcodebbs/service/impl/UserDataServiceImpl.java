@@ -27,6 +27,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -157,6 +159,12 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         stringRedisTemplate.opsForHash().putAll(tokenKey,userMap);
         //设置时效 24小时 从redis过期
         stringRedisTemplate.expire(tokenKey,USER_TOKEN_TTL,TimeUnit.MINUTES);
+        //获取7天后时间
+        LocalDateTime localDateTime = LocalDateTimeUtil.localDateTime();
+        // 时间戳
+        long date = localDateTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+        //将token进行持久化 7天后过期
+        stringRedisTemplate.opsForValue().set(USER_TOKEN_DATA + userData.getUserId(),Long.toString(date),USER_TOKEN_DATA_TTL, TimeUnit.DAYS);
         // 验证完之后颁发token令牌 令牌 7天后过期
         Map<String,Object> jwt =new HashMap<>();
         jwt.put("userId",userData.getUserId());
@@ -322,6 +330,12 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         stringRedisTemplate.opsForHash().putAll(tokenKey,userMap);
         //设置时效 24小时 从redis过期
         stringRedisTemplate.expire(tokenKey,USER_TOKEN_TTL,TimeUnit.MINUTES);
+        //获取7天后时间
+        LocalDateTime localDateTime = LocalDateTimeUtil.localDateTime();
+        // 时间戳
+        long date = localDateTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
+        //将token进行持久化 7天后过期
+        stringRedisTemplate.opsForValue().set(USER_TOKEN_DATA + userData.getUserId(),Long.toString(date),USER_TOKEN_DATA_TTL, TimeUnit.DAYS);
         // 验证完之后颁发token令牌 令牌 7天后过期
         Map<String,Object> jwt =new HashMap<>();
         jwt.put("userId",userData.getUserId());
