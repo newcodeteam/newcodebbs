@@ -6,6 +6,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.dto.UserDTO;
 import com.newcodebbs.dto.UserForm;
@@ -17,7 +18,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newcodebbs.service.IUserTokenService;
 import com.newcodebbs.service.MailService;
 import com.newcodebbs.utils.*;
-import lombok.Data;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 
 import java.time.LocalDateTime;
@@ -106,7 +108,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     }
     
     @Override
-    public Result LoginAndRegister(UserForm userForm) {
+    public Result loginAndRegister(UserForm userForm) {
         String mail = userForm.getMail();
         // 校验邮箱
         if (RegexUtils.isEmailInvalid(mail)) {
@@ -130,11 +132,13 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         //判断用户存在
         if (userData == null) {
             log.info("test");
-            // 不存在,直接创建用户  邮箱验证发送注册验证 填密码
-            if (createUserMail(mail) !=null){
-                return Result.Register("注册成功,请从邮箱点击链接进行验证");
-            }
-            return Result.error("注册失败,邮箱错误");
+            //不存在 直接创建用户
+            userData = createUserMail(mail);
+            // XXX 已废弃 不存在,直接创建用户  邮箱验证发送注册验证 填密码
+//            if (createUserMail(mail) !=null){
+//                return Result.Register("注册成功,请从邮箱点击链接进行验证");
+//            }
+//            return Result.error("注册失败,邮箱错误");
         }
         //存在,判断是否注册验证通过或已被封禁 0是false
         if (!userData.getUserStatus()) {
@@ -202,8 +206,8 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         UserData userData =new UserData();
         // 随机用户id(唯一) ObjectId是MongoDB数据库的一种唯一ID生成策略，是UUID version1的变种
         userData.setUserId(IdUtil.objectId());
-        // 随机密码 (用户注册成功后会提示更改)
-        userData.setUserPwd(RandomUtil.randomNumbers(10));
+        // 随机密码 (用户注册成功后会提示更改) 可选发不发邮件
+        userData.setUserPwd(MD5Util.Md5Code(RandomUtil.randomNumbers(10)));
         // 设置默认头像
 //        userData.setUserIcon(1);
         // 将邮箱传入
@@ -212,15 +216,19 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         userData.setUserName(USER_SQL_NAME + RandomUtil.randomString(10));
         // 将昵称传入
         userData.setUserNickname(mail);
-//        // 保存用户 插入数据库 通过邮箱验证不直接插入数据库
-//        save(userData);
-        if (sendRegisterURL(userData) == 1) {
-            //成功
-            return userData;
-        } else {
-            //失败
-            return null;
-        }
+        //更改状态
+        userData.setUserStatus(true);
+        // 保存用户 插入数据库 通过邮箱验证不直接插入数据库
+        save(userData);
+        return userData;
+        // XXX 废弃 邮件校验
+//        if (sendRegisterURL(userData) == 1) {
+//            //成功
+//            return userData;
+//        } else {
+//            //失败
+//            return null;
+//        }
     }
     
     private int sendRegisterURL(UserData userData){
@@ -259,7 +267,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         return 1;
     }
     @Override
-    public Result RegisterMail(String redisID, String mail, String password) {
+    public Result registerMail(String redisID, String mail, String password) {
         //验证是否有这个用户
         //临时用户数据地址
         String key = USER_EMAIL_USER_KEY + redisID;
@@ -285,7 +293,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     }
     
     @Override
-    public Result Login(UserForm userForm) {
+    public Result login(UserForm userForm) {
         String mail = userForm.getMail();
         String password = userForm.getPassword();
         // 校验邮箱
@@ -351,5 +359,34 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 调用 Token服务类保存token持久化
         iUserTokenService.createToken(userToken);
         return Result.success(JwtToken);
+    }
+    
+    @Override
+    public Result setPassword(String password, HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("token");
+        Claims claims;
+        // 解析jwt令牌
+        try {
+            claims = JwtUtil.parseJWT(token);
+        } catch (Exception e) {
+            //jwt解析失败
+            return Result.error("登陆已过期");
+        }
+        String userId = (String) claims.get("userId");
+        // 根据id查询用户
+        UserData userData = query().eq("user_id",userId).one();
+        log.info("用户状态{}",userData.getUserStatus());
+        // 验证用户数据
+        if (!userData.getUserStatus()) {
+            return Result.error("用户数据已经过期或被封禁");
+        }
+        if (!DataUtil.PatternData(password,DataUtil.PASSWORD_PATTERN)) {
+            return Result.error("密码不规范,请输入8-16位的密码,并且要包含字母和数字");
+        }
+        UpdateWrapper updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("user_id",userId);
+        updateWrapper.set("user_pwd",MD5Util.Md5Code(password));
+        baseMapper.update(userData,updateWrapper);
+        return Result.success("设置密码成功");
     }
 }

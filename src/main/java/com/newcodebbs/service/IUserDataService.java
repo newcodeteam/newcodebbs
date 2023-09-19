@@ -5,6 +5,8 @@ import com.newcodebbs.dto.UserForm;
 import com.newcodebbs.entity.UserData;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>
  * 用户表 服务类
@@ -17,7 +19,7 @@ public interface IUserDataService extends IService<UserData> {
     
     Result sendCode(String mail,String session);
     
-    Result LoginAndRegister(UserForm userForm);
+    Result loginAndRegister(UserForm userForm);
     
     Result logout(String userId);
     
@@ -25,7 +27,9 @@ public interface IUserDataService extends IService<UserData> {
     
     Result cancelFollowed(String myUserId, String userId);
     
-    Result RegisterMail(String redisID,String mail,String password);
+    Result registerMail(String redisID,String mail,String password);
     
-    Result Login(UserForm userForm);
+    Result login(UserForm userForm);
+    
+    Result setPassword(String password, HttpServletRequest httpServletRequest);
 }
