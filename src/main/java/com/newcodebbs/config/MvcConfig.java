@@ -32,7 +32,18 @@ public class MvcConfig implements WebMvcConfigurer {
     
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String[] excludePatterns = new String[]{"/api/user/**","/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/api", "/api-docs", "/api-docs/**", "/doc.html/**"};
+        //不屏蔽的路径
+        String[] excludePatterns = new String[]{
+                "/api/user/**",
+                "/swagger-resources/**",
+                "/webjars/**", "/v2/**",
+                "/swagger-ui.html/**",
+                "/api",
+                "/api-docs",
+                "/api-docs/**",
+                "/doc.html/**",
+                "/api/captcha/**"
+        };
         // 登录拦截器
         registry.addInterceptor(new LoginInterceptor())
                 .excludePathPatterns(

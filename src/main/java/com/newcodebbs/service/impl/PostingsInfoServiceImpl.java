@@ -1,5 +1,7 @@
 package com.newcodebbs.service.impl;
 
+import com.newcodebbs.dto.PostDTO;
+import com.newcodebbs.dto.Result;
 import com.newcodebbs.entity.PostingsInfo;
 import com.newcodebbs.mapper.PostingsInfoMapper;
 import com.newcodebbs.service.IPostingsInfoService;
@@ -16,5 +18,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, PostingsInfo> implements IPostingsInfoService {
-
+    
+    @Override
+    public Result addPostAccept(PostDTO postDTO) {
+        return null;
+    }
 }

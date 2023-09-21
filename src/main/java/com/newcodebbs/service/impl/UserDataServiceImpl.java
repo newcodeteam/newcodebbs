@@ -241,7 +241,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 发送内容 域名地址/redis地址/邮箱
         String text = MAIL_REGISTER_HEAD+"<h2>"+domain+"/api/user/"+sessionId+"/"+userData.getUserMail()+"</h2>30分钟后过期,请您尽快验证</p>";
         Map<String, Object> map = MapUtil.newHashMap();
-        //  存入临时数据 保存临时用户数据 todo bug
+        //  存入临时数据 保存临时用户数据
         map.put("userId",userData.getUserId());
         map.put("userName",userData.getUserName());
         map.put("userMail",userData.getUserMail());

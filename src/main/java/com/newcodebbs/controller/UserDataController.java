@@ -105,9 +105,5 @@ public class UserDataController {
        return iUserDataService.cancelFollowed(myUserId,userId);
    }
 
-   @PostMapping("chat")
-   public Result chat(@RequestBody ChatDTO chatDTO) {
-        // todo 聊天信息
-       return null;
-   }
+   
 }
