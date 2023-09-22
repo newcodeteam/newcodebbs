@@ -48,8 +48,8 @@ public class Result implements Serializable {
      * @param msg 返回描述
      * @return
      */
-    public static Result Register(String msg) {
-        return new Result(RESULT_REGISTER_TRUE,"success",msg);
+    public static Result Register(String msg,Object data) {
+        return new Result(RESULT_REGISTER_TRUE,msg,data);
     }
     /**
      * 执行成功并返回值和描述

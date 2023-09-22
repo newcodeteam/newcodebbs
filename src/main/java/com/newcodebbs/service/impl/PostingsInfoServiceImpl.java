@@ -21,6 +21,7 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
     
     @Override
     public Result addPostAccept(PostDTO postDTO) {
+        
         return null;
     }
 }

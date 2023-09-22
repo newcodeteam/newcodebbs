@@ -134,6 +134,8 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
             log.info("test");
             //不存在 直接创建用户
             userData = createUserMail(mail);
+            String JwtToken = getToken(userData);
+            return Result.Register("注册成功",JwtToken);
             // XXX 已废弃 不存在,直接创建用户  邮箱验证发送注册验证 填密码
 //            if (createUserMail(mail) !=null){
 //                return Result.Register("注册成功,请从邮箱点击链接进行验证");
@@ -144,6 +146,11 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         if (!userData.getUserStatus()) {
             return Result.error("账号未通过注册验证或已被封禁");
         }
+        String JwtToken = getToken(userData);
+        return Result.success(JwtToken);
+    }
+    
+    private String getToken(UserData userData) {
         // 保存用户信息进redis中,并生成jwt将用户基本信息与session返回给前端,同时插入mysql进行持久化处理
         // 随机token 作为登陆令牌
         String token = UUID.randomUUID().toString(true);
@@ -171,19 +178,19 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         stringRedisTemplate.opsForValue().set(USER_TOKEN_DATA + userData.getUserId(),Long.toString(date),USER_TOKEN_DATA_TTL, TimeUnit.DAYS);
         // 验证完之后颁发token令牌 令牌 7天后过期
         Map<String,Object> jwt =new HashMap<>();
-        jwt.put("userId",userData.getUserId());
-        jwt.put("userName",userData.getUserName());
-        jwt.put("userMail",userData.getUserMail());
-        jwt.put("userNickname",userData.getUserNickname());
-        jwt.put("userIcon",userData.getUserIcon());
+        jwt.put("userId", userData.getUserId());
+        jwt.put("userName", userData.getUserName());
+        jwt.put("userMail", userData.getUserMail());
+        jwt.put("userNickname", userData.getUserNickname());
+        jwt.put("userIcon", userData.getUserIcon());
         jwt.put("token",token);
         String JwtToken = JwtUtil.generateJwt(jwt);
-       
+        
         // 创建Token实体类 并构造参数
         UserToken userToken = new UserToken(userData.getUserId(),LocalDateTimeUtil.localDateTime());
         // 调用 Token服务类保存token持久化
         iUserTokenService.createToken(userToken);
-        return Result.success(JwtToken);
+        return JwtToken;
     }
     
     @Override
@@ -321,43 +328,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         }
         // 保存用户信息进redis中,并生成jwt将用户基本信息与session返回给前端,同时插入mysql进行持久化处理
         // 随机token 作为登陆令牌
-        String token = UUID.randomUUID().toString(true);
-        // 将 userData对象转为 hashmap储存
-        // 将 userData 对象的数据 转给UserDTO对象
-        UserDTO userDTO = BeanUtil.copyProperties(userData,UserDTO.class);
-        // 转为Hashmap存储
-        // 将userDTO对象转换为map对象, CopyOptions.create() 是复制一些选项
-        // setIgnoreNullValue(true) 忽略空值
-        // setFieldValueEditor 修改字段的值,用 lambda表达式将字段的值转换为字符串
-        Map<String,Object> userMap = BeanUtil.beanToMap(userDTO,new HashMap<>(),
-                CopyOptions.create()
-                        .setIgnoreNullValue(true)
-                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
-        // 存入 redis token
-        String tokenKey = USER_TOKEN_KEY +token;
-        stringRedisTemplate.opsForHash().putAll(tokenKey,userMap);
-        //设置时效 24小时 从redis过期
-        stringRedisTemplate.expire(tokenKey,USER_TOKEN_TTL,TimeUnit.MINUTES);
-        //获取7天后时间
-        LocalDateTime localDateTime = LocalDateTimeUtil.localDateTime();
-        // 时间戳
-        long date = localDateTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
-        //将token进行持久化 7天后过期
-        stringRedisTemplate.opsForValue().set(USER_TOKEN_DATA + userData.getUserId(),Long.toString(date),USER_TOKEN_DATA_TTL, TimeUnit.DAYS);
-        // 验证完之后颁发token令牌 令牌 7天后过期
-        Map<String,Object> jwt =new HashMap<>();
-        jwt.put("userId",userData.getUserId());
-        jwt.put("userName",userData.getUserName());
-        jwt.put("userMail",userData.getUserMail());
-        jwt.put("userNickname",userData.getUserNickname());
-        jwt.put("userIcon",userData.getUserIcon());
-        jwt.put("token",token);
-        String JwtToken = JwtUtil.generateJwt(jwt);
-    
-        // 创建Token实体类 并构造参数
-        UserToken userToken = new UserToken(userData.getUserId(),LocalDateTimeUtil.localDateTime());
-        // 调用 Token服务类保存token持久化
-        iUserTokenService.createToken(userToken);
+        String JwtToken = getToken(userData);
         return Result.success(JwtToken);
     }
     
