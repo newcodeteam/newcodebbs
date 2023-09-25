@@ -34,6 +34,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         //不屏蔽的路径
         String[] excludePatterns = new String[]{
+                "/api/post/**",
                 "/api/user/**",
                 "/swagger-resources/**",
                 "/webjars/**", "/v2/**",

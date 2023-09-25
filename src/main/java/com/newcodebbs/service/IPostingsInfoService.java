@@ -1,5 +1,6 @@
 package com.newcodebbs.service;
 
+import com.newcodebbs.dto.DefaultPage;
 import com.newcodebbs.dto.PostDTO;
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.entity.PostingsInfo;
@@ -16,4 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IPostingsInfoService extends IService<PostingsInfo> {
     
     Result addPostAccept(PostDTO postDTO);
+    
+    Result defaultPost(DefaultPage defaultPage);
 }
