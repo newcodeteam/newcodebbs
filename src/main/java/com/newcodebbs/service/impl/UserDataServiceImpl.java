@@ -131,7 +131,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         log.debug("{}",userData);
         //判断用户存在
         if (userData == null) {
-            log.info("test");
+//            log.info("test");
             //不存在 直接创建用户
             userData = createUserMail(mail);
             String JwtToken = getToken(userData);
@@ -216,7 +216,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 随机密码 (用户注册成功后会提示更改) 可选发不发邮件
         userData.setUserPwd(MD5Util.Md5Code(RandomUtil.randomNumbers(10)));
         // 设置默认头像
-//        userData.setUserIcon(1);
+        userData.setUserIcon(1);
         // 将邮箱传入
         userData.setUserMail(mail);
         // 随机用户名  user_10位数的随机数
