@@ -10,10 +10,10 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 public class DefaultPage {
     
-    @ApiModelProperty(value = "开始")
+    @ApiModelProperty(value = "第几页")
     private Integer postingsStartPage;
     
-    @ApiModelProperty(value = "结束")
+    @ApiModelProperty(value = "数据数量")
     private Integer postingsEndPage;
     
 }

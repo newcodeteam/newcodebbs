@@ -52,15 +52,21 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
         
         try {
             PostingsInfo postingsInfo = BeanUtil.copyProperties(postDTO,PostingsInfo.class);
-            // 设置 帖子id 当前时间 + 随机十位数
-            Long postingId = Long.valueOf(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + RandomUtil.randomNumbers(10));
+            // 设置 帖子id 当前时间(最大13位，最小10位) + 随机7位数
+            Long postingId = Long.valueOf(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + RandomUtil.randomNumbers(5));
             // 设置 id
             postingsInfo.setPostingsId(postingId);
             // 保存
             save(postingsInfo);
             PostingsData postingsData = BeanUtil.copyProperties(postDTO,PostingsData.class);
+            // 设置data的id
             postingsData.setPostingsId(postingId);
+            //保存
             postingsDataService.save(postingsData);
+            PostingsOther postingsOther = new PostingsOther();
+            //保存
+            postingsOther.setPostingsId(postingId);
+            postingsOtherService.save(postingsOther);
         } catch (Exception e) {
             Result.error("报错");
         }

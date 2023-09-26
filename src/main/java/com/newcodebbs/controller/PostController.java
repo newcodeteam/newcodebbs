@@ -34,17 +34,16 @@ public class PostController {
     private IPostingsInfoService iPostingsInfoService;
     //    默认报错为null
     private String paramError = null;
-    @ApiOperation(value = "查询页面数据，不填参数会默认10条数据一页")
-    @GetMapping(value = {"/defaultPost/{start}/{end}","/defaultPost"})
-    public Result defaultPost(@PathVariable(required = false) Integer start,
-                              @PathVariable(required = false) Integer end){
-        // todo bug 页码问题待修复
-        if (start == null || end == null || start == 1) {
+    @ApiOperation(value = "查询页面数据，{start}为页数,默认第一页")
+    @GetMapping(value = {"/defaultPost/{start}","/defaultPost"})
+    public Result defaultPost(@PathVariable(required = false) Integer start){
+        // 如果默认获取，就是默认第一页
+        if (start == null) {
             return iPostingsInfoService.defaultPost(new DefaultPage(1,10));
         }
-        return iPostingsInfoService.defaultPost(new DefaultPage(start,end));
+        return iPostingsInfoService.defaultPost(new DefaultPage(start,10));
     }
-    
+    @ApiOperation(value = "添加帖子,需要携带Token")
     @PostMapping("/addAcceptPost")
     public Result addPostAccept(@RequestBody PostDTO postDTO, BindingResult result) {
         //        数据校验错误信息
