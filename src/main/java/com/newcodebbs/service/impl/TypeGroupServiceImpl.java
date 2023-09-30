@@ -1,9 +1,12 @@
 package com.newcodebbs.service.impl;
 
+import com.newcodebbs.dto.Result;
 import com.newcodebbs.entity.TypeGroup;
+import com.newcodebbs.entity.UserType;
 import com.newcodebbs.mapper.TypeGroupMapper;
 import com.newcodebbs.service.ITypeGroupService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.newcodebbs.utils.TypeGroupSelect;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +19,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TypeGroupServiceImpl extends ServiceImpl<TypeGroupMapper, TypeGroup> implements ITypeGroupService {
-
+    
+    @Override
+    public Result getType(String userId) {
+        // 查询权限
+        TypeGroup userType = query().eq("user_id",userId).one();
+        return Result.success(TypeGroupSelect.typeGroupNum(userType.getUserTypeId()),(Object) userType.getUserTypeId());
+    }
 }

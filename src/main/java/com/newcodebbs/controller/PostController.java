@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -41,10 +42,7 @@ public class PostController {
     @GetMapping(value = {"/defaultPost/{start}","/defaultPost"})
     public Result defaultPost(@PathVariable(required = false) Integer start){
         // 如果默认获取，就是默认第一页
-        if (start == null) {
-            return iPostingsInfoService.defaultPost(new DefaultPage(1,10));
-        }
-        return iPostingsInfoService.defaultPost(new DefaultPage(start,10));
+        return iPostingsInfoService.defaultPost(new DefaultPage(Objects.requireNonNullElse(start, 1), 10));
     }
     @ApiOperation(value = "添加帖子,需要携带Token")
     @PostMapping("/user/addAcceptPost")

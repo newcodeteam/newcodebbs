@@ -1,10 +1,15 @@
 package com.newcodebbs.service.impl;
 
+import com.newcodebbs.dto.Result;
 import com.newcodebbs.entity.UserType;
 import com.newcodebbs.mapper.UserTypeMapper;
+import com.newcodebbs.service.ITypeGroupService;
 import com.newcodebbs.service.IUserTypeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.newcodebbs.utils.TypeGroupSelect;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -16,5 +21,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserTypeServiceImpl extends ServiceImpl<UserTypeMapper, UserType> implements IUserTypeService {
-
+    @Resource
+    private UserTypeMapper userTypeMapper;
+    
+    public Result getTypeData(String userId) {
+        UserType userType = query().eq("user_id",userId).one();
+        if (userType == null) {
+            return Result.error("未登录");
+        }
+        userType.setId(null);
+        return Result.success(TypeGroupSelect.typeGroupNum(userType.getUserTypeId()),userType);
+    }
 }

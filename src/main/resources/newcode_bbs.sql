@@ -62,6 +62,7 @@ CREATE INDEX mail_index ON user_data (user_mail(9));
 -- 创建前缀索引
 CREATE INDEX name_index ON user_data (user_name(10));
 
+INSERT INTO `user_data` (`id`, `user_id`, `user_name`, `user_mail`, `user_pwd`, `user_nickname`, `user_concern`, `user_fans`, `user_qq`, `user_credits`, `user_golds`, `user_rmbs`, `user_icon`, `user_create_ip`, `user_login_ip`, `user_article`, `user_comments`, `user_status`, `create_time`, `login_time`) VALUES (1, '6518449e8993eeb50b16d6f5', 'user_w4j4o9wpye', 'shanhel@qq.com', '14e981e930f9fd4aed5163cfa5f86a02', 'shanhel@qq.com', 0, 0, '', 0, 0, 0, 1, 0, 0, 0, 0, 1, '2023-08-30 15:54:06', '2023-08-30 15:54:06');
 
 
 #----------------------
@@ -74,6 +75,8 @@ CREATE TABLE `user_type`  (
       `user_type_id` int(3) UNSIGNED NULL DEFAULT 0 COMMENT '权限id,默认0 游客组 无权限',
       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '权限表';
+
+INSERT INTO user_type VALUES (1,'6518449e8993eeb50b16d6f5','超级管理员',1);
 
 #----------------------
 # 权限表 0 为空 1 代表有权限

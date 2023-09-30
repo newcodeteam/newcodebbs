@@ -1,5 +1,6 @@
 package com.newcodebbs.service;
 
+import com.newcodebbs.dto.Result;
 import com.newcodebbs.entity.UserType;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-09-06
  */
 public interface IUserTypeService extends IService<UserType> {
-
+    
+    
+    Result getTypeData(String userId);
 }
