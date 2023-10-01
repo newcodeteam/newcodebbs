@@ -4,16 +4,12 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
-import com.newcodebbs.dto.Result;
 import com.newcodebbs.dto.UserDTO;
-import com.newcodebbs.entity.UserData;
-import com.newcodebbs.entity.UserToken;
 import com.newcodebbs.utils.JwtUtil;
 import com.newcodebbs.utils.UserHolder;
 import io.jsonwebtoken.Claims;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;

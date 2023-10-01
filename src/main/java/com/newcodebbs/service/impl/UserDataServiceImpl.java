@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -338,16 +339,8 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     
     @Override
     public Result setPassword(String password, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
-        Claims claims;
-        // 解析jwt令牌
-        try {
-            claims = JwtUtil.parseJWT(token);
-        } catch (Exception e) {
-            //jwt解析失败
-            return Result.error("登陆已过期");
-        }
-        String userId = (String) claims.get("userId");
+        UserDTO userTokenData = UserHolder.getUser();
+        String userId = userTokenData.getUserId();
         // 根据id查询用户
         UserData userData = query().eq("user_id",userId).one();
         log.info("用户状态{}",userData.getUserStatus());
@@ -363,5 +356,10 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         updateWrapper.set("user_pwd",MD5Util.Md5Code(password));
         baseMapper.update(userData,updateWrapper);
         return Result.success("设置密码成功");
+    }
+    
+    @Override
+    public UserData userSelectUserIdData(String userId) {
+        return query().eq("user_id",userId).one();
     }
 }

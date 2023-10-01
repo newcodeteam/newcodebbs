@@ -6,6 +6,7 @@ import com.newcodebbs.entity.UserData;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -32,4 +33,6 @@ public interface IUserDataService extends IService<UserData> {
     Result login(UserForm userForm);
     
     Result setPassword(String password, HttpServletRequest httpServletRequest);
+    
+    UserData userSelectUserIdData(String userId);
 }

@@ -2,9 +2,11 @@ package com.newcodebbs.service;
 
 import com.newcodebbs.dto.Result;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author shanhe
  */
 public interface SelectDataService {
-    Result selectData(Integer name, Object[] data);
+    Result selectIdData(Integer name, Integer type, Object data);
 }
