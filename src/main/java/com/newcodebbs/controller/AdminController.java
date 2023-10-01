@@ -39,7 +39,7 @@ public class AdminController {
     @ApiOperation(value = "轻量条件查询(单个数据)")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name",value = "查询类型id，0 -> 用户 , 1 -> 帖子, 2 -> 评论"),
-            @ApiImplicitParam(name = "type",value = "（具体去文档看,这里列举的是用户）查询字段类型，0 -> id , 1 -> 用户名, 2 -> 邮箱 , 3 -> 昵称"),
+            @ApiImplicitParam(name = "type",value = "（具体去文档看,这里列举的是用户）查询字段类型，0 -> id , 1 -> 邮箱, 2 -> 用户名 "),
             @ApiImplicitParam(name = "data",value = "查询的数据"),
     })
     @ApiResponses(

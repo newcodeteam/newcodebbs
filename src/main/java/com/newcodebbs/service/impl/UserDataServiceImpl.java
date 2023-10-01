@@ -360,6 +360,22 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     
     @Override
     public UserData userSelectUserIdData(String userId) {
-        return query().eq("user_id",userId).one();
+        UserData userData = query().eq("user_id",userId).one();
+        userData.setUserPwd("");
+        return userData;
+    }
+    
+    @Override
+    public UserData userSelectMailData(String mail) {
+        UserData userData = query().eq("user_mail",mail).one();
+        userData.setUserPwd("");
+        return userData;
+    }
+    
+    @Override
+    public UserData userSelectNameData(String name) {
+        UserData userData = query().eq("user_name",name).one();
+        userData.setUserPwd("");
+        return userData;
     }
 }

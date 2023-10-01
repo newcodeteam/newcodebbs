@@ -43,7 +43,8 @@ public class SelectDataServiceImpl implements SelectDataService {
                         return this.adminSelectUserIdData((String) data);
                     case 1:
                         return this.adminSelectUserMail((String) data);
-                    
+                    case 2:
+                        return this.adminSelectUserName((String) data);
                     default:
                         return Result.error("未有这个方法");
                 }
@@ -51,6 +52,15 @@ public class SelectDataServiceImpl implements SelectDataService {
             default:
                 return Result.error("未有这个方法");
         }
+    }
+    
+    /**
+     * 查询单个名字数据
+     * @param name
+     * @return
+     */
+    private Result adminSelectUserName(String name) {
+        return Result.success(iUserDataService.userSelectNameData(name));
     }
     
     /**
@@ -68,6 +78,6 @@ public class SelectDataServiceImpl implements SelectDataService {
      * @return
      */
     private Result adminSelectUserMail(String mail){
-        return Result.success(iUserDataService.userSelectUserIdData(mail));
+        return Result.success(iUserDataService.userSelectMailData(mail));
     }
 }

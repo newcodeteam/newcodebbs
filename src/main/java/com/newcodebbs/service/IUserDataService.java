@@ -35,4 +35,8 @@ public interface IUserDataService extends IService<UserData> {
     Result setPassword(String password, HttpServletRequest httpServletRequest);
     
     UserData userSelectUserIdData(String userId);
+    
+    UserData userSelectMailData(String mail);
+    
+    UserData userSelectNameData(String name);
 }
