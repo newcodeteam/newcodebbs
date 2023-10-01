@@ -13,10 +13,8 @@ import com.newcodebbs.dto.UserForm;
 import com.newcodebbs.entity.UserData;
 import com.newcodebbs.entity.UserToken;
 import com.newcodebbs.mapper.UserDataMapper;
-import com.newcodebbs.service.IUserDataService;
+import com.newcodebbs.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.newcodebbs.service.IUserTokenService;
-import com.newcodebbs.service.MailService;
 import com.newcodebbs.utils.*;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +63,8 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     
     @Resource
     private IUserTokenService iUserTokenService;
+    @Resource
+    private IUserTypeService userTypeService;
     
     @Value("${domain.name}")
     private String domain;
@@ -157,6 +157,10 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         // 将 userData对象转为 hashmap储存
         // 将 userData 对象的数据 转给UserDTO对象
         UserDTO userDTO = BeanUtil.copyProperties(userData,UserDTO.class);
+        //获取权限id
+        String[] resultData = userTypeService.getTypeDataString(userData.getUserId());
+        userDTO.setUserType(Integer.valueOf(resultData[4]));
+        userDTO.setUserTypeName(resultData[3]);
         // 转为Hashmap存储
         // 将userDTO对象转换为map对象, CopyOptions.create() 是复制一些选项
         // setIgnoreNullValue(true) 忽略空值

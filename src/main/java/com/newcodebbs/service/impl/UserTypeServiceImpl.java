@@ -32,4 +32,18 @@ public class UserTypeServiceImpl extends ServiceImpl<UserTypeMapper, UserType> i
         userType.setId(null);
         return Result.success(TypeGroupSelect.typeGroupNum(userType.getUserTypeId()),userType);
     }
+    
+    /**
+     * 查询权限数组
+     * @param userId id
+     * @return 权限数组
+     */
+    public String[] getTypeDataString(String userId) {
+        UserType userType = query().eq("user_id",userId).one();
+        if (userType == null) {
+            return null;
+        }
+        String[] stringArr = {userType.getUserId() ,userType.getUserId() ,userType.getUserTypeNickname() ,TypeGroupSelect.typeGroupNum(userType.getUserTypeId()) ,String.valueOf(userType.getUserTypeId())};
+        return stringArr;
+    }
 }

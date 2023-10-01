@@ -18,4 +18,8 @@ public class UserDTO {
     private String userNickname;
     @ApiModelProperty(value = "头像id,默认为默认头像地址")
     private Integer userIcon;
+    @ApiModelProperty(value = "权限类型")
+    private Integer userType;
+    @ApiModelProperty(value = "权限昵称")
+    private String userTypeName;
 }

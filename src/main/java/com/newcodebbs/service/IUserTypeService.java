@@ -16,4 +16,6 @@ public interface IUserTypeService extends IService<UserType> {
     
     
     Result getTypeData(String userId);
+    
+    String[] getTypeDataString(String userId);
 }
