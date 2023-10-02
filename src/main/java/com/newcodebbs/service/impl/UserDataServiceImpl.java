@@ -163,8 +163,13 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         UserDTO userDTO = BeanUtil.copyProperties(userData,UserDTO.class);
         //获取权限id
         String[] resultData = userTypeService.getTypeDataString(userData.getUserId());
-        userDTO.setUserType(Integer.valueOf(resultData[4]));
-        userDTO.setUserTypeName(resultData[3]);
+        if (resultData == null) {
+            userDTO.setUserType(0);
+            userDTO.setUserTypeName("用户组");
+        } else {
+            userDTO.setUserType(Integer.valueOf(resultData[4]));
+            userDTO.setUserTypeName(resultData[3]);
+        }
         // 转为Hashmap存储
         // 将userDTO对象转换为map对象, CopyOptions.create() 是复制一些选项
         // setIgnoreNullValue(true) 忽略空值
@@ -400,14 +405,14 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     @Override
     public List<?> userSelectMailBlurData(String mail) {
         QueryWrapper<UserData> wrapper = new QueryWrapper<>();
-        wrapper.likeLeft("user_name", mail);
+        wrapper.likeLeft("user_mail", mail);
         return userDataMapper.selectList(wrapper);
     }
     
     @Override
     public List<?> userSelectNicknameData(String nickname) {
         QueryWrapper<UserData> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_name",nickname);
+        wrapper.eq("user_nickname",nickname);
         return userDataMapper.selectList(wrapper);
     }
 }

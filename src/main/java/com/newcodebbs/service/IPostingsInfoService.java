@@ -7,6 +7,8 @@ import com.newcodebbs.entity.PostingsInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -23,4 +25,6 @@ public interface IPostingsInfoService extends IService<PostingsInfo> {
     Result defaultPost(DefaultPage defaultPage);
     
     Result updatePost(PostDTO postDTO);
+    
+    List<?> selectPostingInfoData(Object postingsId);
 }

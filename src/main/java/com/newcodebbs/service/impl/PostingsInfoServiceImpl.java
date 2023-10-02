@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newcodebbs.dto.DefaultPage;
@@ -114,5 +115,13 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
     public Result updatePost(PostDTO postDTO) {
         // todo 更改帖子信息
         return null;
+    }
+    
+    @Override
+    public List<?>  selectPostingInfoData(Object postingsId) {
+        
+        QueryWrapper<PostingsInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("postingsId",postingsId);
+        return postingsInfoMapper.selectList(wrapper);
     }
 }

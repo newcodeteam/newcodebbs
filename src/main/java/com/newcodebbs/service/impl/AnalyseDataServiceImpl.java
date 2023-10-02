@@ -1,10 +1,18 @@
 package com.newcodebbs.service.impl;
 
+import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newcodebbs.entity.AnalyseData;
+import com.newcodebbs.entity.UserData;
 import com.newcodebbs.mapper.AnalyseDataMapper;
 import com.newcodebbs.service.IAnalyseDataService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * <p>
@@ -16,5 +24,22 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AnalyseDataServiceImpl extends ServiceImpl<AnalyseDataMapper, AnalyseData> implements IAnalyseDataService {
-
+    
+    @Resource
+    private AnalyseDataMapper analyseDataMapper;
+    
+    @Override
+    public Map<String, Object> selectAnalyseData() {
+        IPage page = new Page(1,30);
+        analyseDataMapper.selectPage(page,null);
+        Map<String,Object> map = MapUtil.newHashMap();
+        // 当前页数
+        // 当前页数
+        map.put("current",page.getCurrent());
+        // 总页数
+        map.put("pages",page.getPages());
+        // 当前页数内容
+        map.put("records",page.getRecords());
+        return map;
+    }
 }

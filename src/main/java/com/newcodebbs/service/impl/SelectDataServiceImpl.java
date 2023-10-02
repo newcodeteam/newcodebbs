@@ -68,6 +68,7 @@ public class SelectDataServiceImpl implements SelectDataService {
                 if (blur) {
                     switch (type){
                         case 0:
+                            // fixme 已知Bug，暂时无法使用
                             return this.adminSelectUserMailBlur((String) data);
                         case 1:
                             return this.adminSelectUserNameBlur((String) data);

@@ -42,9 +42,9 @@ public class AdminController {
                     @ApiResponse(code = 404, message = "不存在") ,@ApiResponse(code = 401, message = "缺少参数") })
     @PostMapping("/select/selectData")
     public Result selectAllData(@RequestBody SelectDTO selectDTO) {
-        // 0 为单个数据
+//         0 为单个数据
         if (selectDTO.getType() == 0) return selectDataService.selectIdData(selectDTO.getTypeName(),selectDTO.getTypeCategory(),selectDTO.getData());
-        // 1 为多个数据
+//         1 为多个数据
         else return selectDataService.selectAllData(selectDTO.getTypeName(),selectDTO.getTypeCategory(),selectDTO.getData(),selectDTO.isBlur());
     }
 }

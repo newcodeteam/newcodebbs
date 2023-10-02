@@ -256,7 +256,7 @@ CREATE TABLE `postings_info`(
       `postings_outline` varchar(255) NOT NULL COMMENT '帖子简介',
       `postings_tag` varchar(255) NOT NULL COMMENT '帖子标签，用,分割开关键词',
       `postings_tutorial` tinyint(1) NULL DEFAULT 0 COMMENT '默认0 是否是教程',
-      `postings_money_id` int(11) NULL DEFAULT -1 COMMENT '默认0 是否有付费，如果有则为id，没有则为-1',
+      `postings_money_id` int(11) NULL DEFAULT -1 COMMENT '默认-1 是否有付费，如果有则为id，没有则为-1',
       `postings_vip_read` tinyint(1) NULL DEFAULT 0 COMMENT '默认0 是否vip才能访问',
       `postings_vip_category_id` int(11) NOT NULL COMMENT '分类id',
       UNIQUE (`postings_id`),
@@ -272,6 +272,8 @@ CREATE TABLE `postings_other`(
       `postings_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子id',
       `postings_likes` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '帖子点赞数',
       `postings_views` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '帖子浏览量数',
+      `postings_create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '帖子创建时间',
+      `postings_update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '帖子更改时间',
       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '帖子其他信息';
 
@@ -293,12 +295,14 @@ CREATE TABLE `analyse_data`(
       `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键Id',
       `postings_id` bigint(20) UNSIGNED NOT NULL COMMENT '帖子id',
       `postings_weighted` int(5) UNSIGNED NOT NULL COMMENT '帖子权重',
-      `weighted_tag` int(5) UNSIGNED NOT NULL COMMENT '帖子所属标签',
+      `weighted_tag` int(5) UNSIGNED NOT NULL COMMENT '帖子所属标签id',
       `weighted_category` int(5) UNSIGNED NOT NULL COMMENT '帖子所属板块',
       `weighted_type` text NOT NULL COMMENT '推荐理由',
    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Compact COMMENT '数据分析以及推荐权重表';
 
+INSERT INTO analyse_data VALUES (null,4049054687345346048,1,1,1,'默认推荐');
+INSERT INTO analyse_data VALUES (null,5926961023837945856,1,1,2,'默认推荐');
 
 #----------------------
 # 充值流水表
@@ -374,26 +378,26 @@ CREATE TABLE `website_data`(
 
 
 # 测试数据 23条
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (1, 4049054687345346048, '小姐', 'ku1IQAE2eE', '杰宏', 111, 513, 26, 972);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (2, 8747724659963633664, '女士', 'y6M9oshBff', '致远', 4, 729, 83, 98);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (3, 5167439288470701056, '先生', 'TIwNjb4zFD', '宇宁', 126, 950, 27, 604);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (4, 105912534205416800, '小姐', '5QAviTyNPo', '秀英', 53, 107, 82, 912);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (5, 2610033841747505664, '先生', 'n5q1zIUvBd', '安琪', 89, 670, 66, 117);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (6, 8421933980408221696, '教授', 'EIdT6mgYO3', '睿', 36, 499, 76, 226);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (7, 1319837935217532928, '女士', '08kf0Woasz', '睿', 34, 702, 109, 145);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (8, 4307891086866877952, '教授', 'fJW3guFN32', '云熙', 25, 919, 73, 827);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (9, 2037002112971599872, '小姐', 'lFpDOvvY3G', '秀英', 45, 955, 80, 710);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (10, 3954882769513802752, '女士', 'wgwLYx0Pwc', '宇宁', 124, 188, 49, 965);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (11, 7196667675121475584, '女士', 'wPXwrMbfp3', '子异', 106, 296, 9, 119);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (12, 8388236496515786752, '女士', 'yXi2rQN7wP', '詩涵', 91, 553, 99, 489);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (13, 798505514698480384, '小姐', '8XLouCljkM', '晓明', 97, 101, 55, 464);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (14, 2283985374111051264, '教授', 'WeNJ9MvGuY', '秀英', 66, 38, 7, 661);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (15, 5470189186999033856, '女士', '83UGbWgRDy', '岚', 123, 788, 54, 221);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (16, 6634219451783325696, '太太', '9MndtXCpnn', '子韬', 91, 575, 92, 272);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (17, 2287250923615755008, '女士', 'JGk6Z8qtXA', '秀英', 18, 575, 32, 815);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (18, 3016563054894268416, '教授', 'XaA7ZHuaVb', '晓明', 121, 838, 8, 143);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (19, 5926961023837945856, '教授', 'idpN361262', '岚', 67, 394, 16, 124);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (20, 3456946975675302400, '太太', 'mJq2fD4MFH', '杰宏', 110, 270, 107, 932);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (21, 9259052668962822144, '女士', 'AIVSUwT5YX', '秀英', 66, 6, 97, 158);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (22, 9497264240233977856, '女士', 'vCskEmP318', '晓明', 88, 823, 13, 919);
-INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (23, 6427927815447265280, '太太', 'zZDf8QDcHV', '云熙', 42, 513, 6, 728);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (1, 4049054687345346048, '默认标签,基本数据', '哈哈哈默认数据1', '杰宏', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (2, 8747724659963633664, '默认标签', '165464', '致远', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (3, 5167439288470701056, '默认标签', '哈哈哈默认数据111', '宇宁', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (4, 105912534205416800, '默认标签', '哈哈哈默认数据11', '秀英', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (5, 2610033841747505664, '默认标签', '哈哈哈默认数据1n5q1zIUvBd', '安琪', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (6, 8421933980408221696, '默认标签', '哈哈哈默认数据1EIdT6mgYO3', '睿', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (7, 1319837935217532928, '默认标签', '08kf哈哈哈默认数据10Woasz', '睿', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (8, 4307891086866877952, '默认标签', 'fJW3g哈哈哈默认数据1uFN32', '云熙', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (9, 2037002112971599872, '默认标签', 'lFpD哈哈哈默认数据1OvvY3G', '秀英', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (10, 3954882769513802752, '默认标签', 'wgw哈哈哈默认数据1LYx0Pwc', '宇宁', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (11, 7196667675121475584, '默认标签', 'wPXw哈哈哈默认数据1rMbfp3', '子异', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (12, 8388236496515786752, '默认标签', 'yXi2哈哈哈默认数据1rQN7wP', '詩涵', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (13, 798505514698480384, '默认标签', '8XLo哈哈哈默认数据1uCljkM', '晓明', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (14, 2283985374111051264, '默认标签', 'WeNJ哈哈哈默认数据19MvGuY', '秀英', 0, -1, 0, 1);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (15, 5470189186999033856, '默认标签', '83UG哈哈哈默认数据1bWgRDy', '岚', 0, -1, 0, 2);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (16, 6634219451783325696, '默认标签', '9Mnd哈哈哈默认数据1tXCpnn', '子韬', 0, -1, 0, 2);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (17, 2287250923615755008, '默认标签', 'JGk6哈哈哈默认数据1Z8qtXA', '秀英', 0, -1, 0, 2);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (18, 3016563054894268416, '默认标签', 'XaA7哈哈哈默认数据1ZHuaVb', '晓明', 0, -1, 0, 2);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (19, 5926961023837945856, '默认标签', 'idpN3哈哈哈默认数据161262', '岚', 0, -1, 0, 2);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (20, 3456946975675302400, '默认标签', 'mJq2f哈哈哈默认数据1D4MFH', '杰宏', 0, -1, 0, 2);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (21, 9259052668962822144, '默认标签', 'AIVSU哈哈哈默认数据1wT5YX', '秀英', 0, -1, 0, 2);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (22, 9497264240233977856, '默认标签', 'vCskE哈哈哈默认数据1mP318', '晓明', 0, -1, 0, 3);
+INSERT INTO `postings_info` (`id`, `postings_id`, `postings_title`, `postings_outline`, `postings_tag`, `postings_tutorial`, `postings_money_id`, `postings_vip_read`, `postings_vip_category_id`) VALUES (23, 6427927815447265280, '默认标签', 'zZDf8哈哈哈默认数据1QDcHV', '云熙', 0, -1, 0, 3);

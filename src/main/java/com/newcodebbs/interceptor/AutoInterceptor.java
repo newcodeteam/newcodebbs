@@ -60,7 +60,7 @@ public class AutoInterceptor implements HandlerInterceptor {
             String tokenKey = USER_TOKEN_DATA + id;
             // 查持久化时间
             String tokenSessionDate = stringRedisTemplate.opsForValue().get(tokenKey);
-            if (Long.valueOf(tokenSessionDate) >= System.currentTimeMillis()) {
+            if (tokenSessionDate != null && Long.parseLong(tokenSessionDate) >= System.currentTimeMillis()) {
                 // jwt数据没有过期,将数据继续持久化
                 UserDTO userDTO = new UserDTO();
                 userDTO.setUserId(id);

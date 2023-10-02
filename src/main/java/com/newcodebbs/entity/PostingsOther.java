@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,7 +18,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author shanhe
- * @since 2023-09-06
+ * @since 2023-10-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -43,6 +44,14 @@ public class PostingsOther implements Serializable {
     @ApiModelProperty(value = "帖子浏览量数")
     @TableField("postings_views")
     private Long postingsViews;
+
+    @ApiModelProperty(value = "帖子创建时间")
+    @TableField("postings_create_time")
+    private LocalDateTime postingsCreateTime;
+
+    @ApiModelProperty(value = "帖子更改时间")
+    @TableField("postings_update_time")
+    private LocalDateTime postingsUpdateTime;
 
 
 }
