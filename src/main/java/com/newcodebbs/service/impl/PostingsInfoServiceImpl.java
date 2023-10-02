@@ -49,6 +49,7 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
     
     @Override
     public Result addPostAccept(PostDTO postDTO, HttpServletRequest httpServlet) {
+        // XXX 需要将解析jwt令牌改为 本地线程获取数据
         Claims claims = tokenHttp(httpServlet);
         if (claims.isEmpty()) {
             return Result.error("token未携带");
@@ -79,6 +80,7 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
     }
     
     private static Claims tokenHttp(HttpServletRequest httpServlet) {
+        // XXX 即将废弃功能
         String token = httpServlet.getHeader("token");
         //定义局部变量
         Claims claims;
@@ -110,6 +112,7 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
     
     @Override
     public Result updatePost(PostDTO postDTO) {
+        // todo 更改帖子信息
         return null;
     }
 }

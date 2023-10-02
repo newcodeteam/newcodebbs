@@ -9,4 +9,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface SelectDataService {
     Result selectIdData(Integer name, Integer type, Object data);
+    
+    Result selectAllData(Integer name, Integer type, Object data, boolean blur);
 }

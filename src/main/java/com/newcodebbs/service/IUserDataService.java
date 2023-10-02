@@ -39,4 +39,12 @@ public interface IUserDataService extends IService<UserData> {
     UserData userSelectMailData(String mail);
     
     UserData userSelectNameData(String name);
+    
+    List<?> userSelectNicknameBlurData(String nickname);
+    
+    List<?> userSelectNameBlurData(String name);
+    
+    List<?> userSelectMailBlurData(String mail);
+    
+    List<?> userSelectNicknameData(String nickname);
 }

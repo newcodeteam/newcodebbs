@@ -6,6 +6,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.dto.UserDTO;
@@ -54,6 +55,8 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private UserDataMapper userDataMapper;
     
     //    是否开启邮箱验证 默认为false
     @Value("${email.test:false}")
@@ -244,6 +247,7 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
     }
     
     private int sendRegisterURL(UserData userData){
+        // fixme 已经废弃功能
         // redis 临时id
         String sessionId = IdUtil.objectId();
         // 需要发送的邮箱
@@ -377,5 +381,33 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         UserData userData = query().eq("user_name",name).one();
         userData.setUserPwd("");
         return userData;
+    }
+    
+    @Override
+    public List<?> userSelectNicknameBlurData(String nickname) {
+        QueryWrapper<UserData> wrapper = new QueryWrapper<>();
+        wrapper.like("user_nickname", nickname);
+        return userDataMapper.selectList(wrapper);
+    }
+    
+    @Override
+    public List<?> userSelectNameBlurData(String name) {
+        QueryWrapper<UserData> wrapper = new QueryWrapper<>();
+        wrapper.like("user_name", name);
+        return userDataMapper.selectList(wrapper);
+    }
+    
+    @Override
+    public List<?> userSelectMailBlurData(String mail) {
+        QueryWrapper<UserData> wrapper = new QueryWrapper<>();
+        wrapper.likeLeft("user_name", mail);
+        return userDataMapper.selectList(wrapper);
+    }
+    
+    @Override
+    public List<?> userSelectNicknameData(String nickname) {
+        QueryWrapper<UserData> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_name",nickname);
+        return userDataMapper.selectList(wrapper);
     }
 }
