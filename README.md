@@ -31,7 +31,7 @@ idea 打开 pom.xml文件<br>
 最好使用docker 进行配置 ，后续也会推出docker环境包
 
 ## 接口文档
-运行项目之后，打开<br>
+运行项目之后，然后打开<br>
 `localhost:8080/doc.html`
 
 
