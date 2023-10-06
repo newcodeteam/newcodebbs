@@ -1,3 +1,11 @@
+# 目录
+* <a href="#newcodebbs简介">newcodebbs简介</a>
+* <a href="#使用技术栈">使用技术栈</a>
+* <a href="#运行项目">运行项目</a>
+* <a href="#生产环境要求">生产环境要求</a>
+* <a href="#接口文档">接口文档</a>
+* <a href="#生产环境要求">本项目功能架构图</a>
+
 # newcodebbs简介
 newcodebbs论坛是 newcodeteam 系列的产品<br>
 NewCodeBBS （新代码论坛）是一个集在线聊天，传统论坛，教程网，轻量购物网合一的综合大型论坛<br>
@@ -21,6 +29,10 @@ idea 打开 pom.xml文件<br>
 4. Tomcat 8 - 9 
 <br>
 最好使用docker 进行配置 ，后续也会推出docker环境包
+
+## 接口文档
+运行项目之后，打开<br>
+`localhost:8080/doc.html`
 
 
 # 本项目功能架构图
