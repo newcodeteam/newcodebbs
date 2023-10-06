@@ -20,7 +20,9 @@ NewCodeBBS （新代码论坛）是一个集在线聊天，传统论坛，教程
 
 ## 运行项目
 idea 打开 pom.xml文件<br>
-等待加载完依赖即可运行。
+然后在`src/main/resources`目录里面找到 `newcode_bbs.sql` 文件，将sql导入进数据库，<br>
+并在`src/main/resources`里的`application.properties`文件中设置Mysql以及redis的账号密码<br>
+最后等待加载完依赖即可运行。
 
 ## 生产环境要求
 1. Mysql 5.7 以上
