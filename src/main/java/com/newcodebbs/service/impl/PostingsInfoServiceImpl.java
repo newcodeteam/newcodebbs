@@ -119,9 +119,7 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
     
     @Override
     public List<?>  selectPostingInfoData(Object postingsId) {
-        
-        QueryWrapper<PostingsInfo> wrapper = new QueryWrapper<>();
-        wrapper.eq("postingsId",postingsId);
-        return postingsInfoMapper.selectList(wrapper);
+        Page<PostingsInfo> page =query().eq("postings_id",postingsId).page(new Page<>(1,10));
+        return page.getRecords();
     }
 }

@@ -3,6 +3,7 @@ package com.newcodebbs.service;
 import com.newcodebbs.entity.AnalyseData;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,5 +16,5 @@ import java.util.Map;
  */
 public interface IAnalyseDataService extends IService<AnalyseData> {
     
-    Map<String,Object> selectAnalyseData();
+    List<?> selectAnalyseData();
 }

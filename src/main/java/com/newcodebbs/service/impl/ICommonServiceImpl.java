@@ -7,11 +7,13 @@ import com.newcodebbs.service.IAnalyseDataService;
 import com.newcodebbs.service.ICommonService;
 import com.newcodebbs.service.IPostingsInfoService;
 import com.newcodebbs.service.IPostingsOtherService;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -22,7 +24,7 @@ import static com.newcodebbs.Constants.RedisConstants.*;
 
 
 @Service
-@Slf4j
+@Log4j2
 public class ICommonServiceImpl implements ICommonService {
     @Resource
     private IAnalyseDataService analyseDataService;
@@ -43,10 +45,13 @@ public class ICommonServiceImpl implements ICommonService {
         // 不存在或者逻辑已过期 , 开始重构缓存
         String lockKey = CACHE_lOCK_KEY + "lock";
         boolean isLock = this.tryLock(lockKey);
-        if (bodymap.isEmpty() || isLock) {
+        log.debug("执行到这里了0");
+        if (bodymap.isEmpty() && isLock ) {
             CACHE_THREAD.submit(() ->{
                try {
-                   return Result.success(this.saveBodyRedis(key));
+                   Map<Object,Object> bodyData = this.saveBodyRedis(key);
+                   log.debug("获取了数据{}",bodyData);
+                   return Result.success(bodyData);
                } catch (Exception e) {
                    return Result.error("遭到不可抗力因素，程序停止，请联系管理员");
                } finally {
@@ -64,20 +69,18 @@ public class ICommonServiceImpl implements ICommonService {
      * @param key key地址
      * @return 首页数据
      */
-    private Map<String, Object> saveBodyRedis(String key) {
+    private Map<Object,Object> saveBodyRedis(String key) {
         // bug
-        Map<String,Object> analyseData = analyseDataService.selectAnalyseData();
-        List<?> postsOther = postingsOtherService.selectPostingOtherData(analyseData.get("postingsId"));
-        List<?>  postsInfo = postingsInfoService.selectPostingInfoData(analyseData.get("postingsId"));
-        log.info("{}",analyseData);
-        log.info("postsOther:{}",postsOther);
-        log.info("postsInfo:{}",postsInfo);
-        Map<String,Object> map = MapUtil.newHashMap();
-        map.put("analyseData",analyseData);
-        map.put("postsOther",postsOther);
-        map.put("postsInfo",postsInfo);
-        
-        return map;
+        List<?> analyseData = analyseDataService.selectAnalyseData();
+        log.debug("查询的list map数据{}",analyseData);
+        HashMap<Object, Object> listMap = new HashMap<>();
+        for (int i = 0; i < analyseData.size(); i++) {
+            listMap.put("info"+i,postingsOtherService.selectPostingOtherData(analyseData.get(i)));
+            listMap.put("other"+i,postingsOtherService.selectPostingOtherData(analyseData.get(i)));
+        }
+//        List<?> postsOther = postingsOtherService.selectPostingOtherData(analyseData.get("postingsId"));
+//        List<?>  postsInfo = postingsInfoService.selectPostingInfoData(analyseData.get("postingsId"));
+        return listMap;
     }
     
     /**

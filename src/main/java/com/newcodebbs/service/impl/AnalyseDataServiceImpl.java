@@ -9,9 +9,11 @@ import com.newcodebbs.entity.UserData;
 import com.newcodebbs.mapper.AnalyseDataMapper;
 import com.newcodebbs.service.IAnalyseDataService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +24,7 @@ import java.util.Map;
  * @author shanhe
  * @since 2023-09-06
  */
+@Slf4j
 @Service
 public class AnalyseDataServiceImpl extends ServiceImpl<AnalyseDataMapper, AnalyseData> implements IAnalyseDataService {
     
@@ -29,17 +32,26 @@ public class AnalyseDataServiceImpl extends ServiceImpl<AnalyseDataMapper, Analy
     private AnalyseDataMapper analyseDataMapper;
     
     @Override
-    public Map<String, Object> selectAnalyseData() {
-        IPage page = new Page(1,30);
-        analyseDataMapper.selectPage(page,null);
-        Map<String,Object> map = MapUtil.newHashMap();
-        // 当前页数
-        // 当前页数
-        map.put("current",page.getCurrent());
-        // 总页数
-        map.put("pages",page.getPages());
-        // 当前页数内容
-        map.put("records",page.getRecords());
+    public List<?> selectAnalyseData() {
+        Page page = new Page(1, 5);
+// 创建QueryWrapper对象
+        QueryWrapper<AnalyseData> qw = new QueryWrapper<>();
+// 设置查询条件
+// 调用selectMapsPage方法
+        Page page1 = analyseDataMapper.selectMapsPage(page, qw);
+// 打印查询结果
+        List<?> map = page.getRecords();
+//        qie
+//        IPage page = new Page(1,30);
+//        analyseDataMapper.selectPage(page,null);
+//        Map<String,Object> map = MapUtil.newHashMap();
+//        // 当前页数
+//        // 当前页数
+//        map.put("current",page.getCurrent());
+//        // 总页数
+//        map.put("pages",page.getPages());
+//        // 当前页数内容
+//        map.put("records",page.getRecords());
         return map;
     }
 }

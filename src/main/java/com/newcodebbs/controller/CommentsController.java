@@ -1,4 +1,7 @@
 package com.newcodebbs.controller;
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * 评论控制器
