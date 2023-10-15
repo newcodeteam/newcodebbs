@@ -29,10 +29,7 @@ public class PostingsOtherServiceImpl extends ServiceImpl<PostingsOtherMapper, P
     private PostingsOtherMapper postingsOtherMapper;
     
     @Override
-    public List<?> selectPostingOtherData(Object postingsId) {
-        Page<PostingsOther> page =query().eq("postings_id",postingsId).page(new Page<>(1,10));
-        List<?> list = page.getRecords();
-        log.info("测试{}",list);
-        return page.getRecords();
+    public PostingsOther selectPostingOtherData(Object postingsId) {
+        return query().eq("postings_id",postingsId).one();
     }
 }

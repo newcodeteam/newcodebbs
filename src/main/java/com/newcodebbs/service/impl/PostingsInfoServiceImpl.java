@@ -118,8 +118,7 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
     }
     
     @Override
-    public List<?>  selectPostingInfoData(Object postingsId) {
-        Page<PostingsInfo> page =query().eq("postings_id",postingsId).page(new Page<>(1,10));
-        return page.getRecords();
+    public PostingsInfo  selectPostingInfoData(Object postingsId) {
+        return query().eq("postings_id",postingsId).one();
     }
 }

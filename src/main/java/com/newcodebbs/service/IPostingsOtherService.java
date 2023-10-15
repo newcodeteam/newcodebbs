@@ -16,5 +16,5 @@ import java.util.Map;
  */
 public interface IPostingsOtherService extends IService<PostingsOther> {
     
-    List<?> selectPostingOtherData(Object postingsId);
+    PostingsOther selectPostingOtherData(Object postingsId);
 }

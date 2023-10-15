@@ -1,13 +1,11 @@
 package com.newcodebbs.service.impl;
 
-import cn.hutool.core.map.MapUtil;
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.entity.AnalyseData;
 import com.newcodebbs.service.IAnalyseDataService;
 import com.newcodebbs.service.ICommonService;
 import com.newcodebbs.service.IPostingsInfoService;
 import com.newcodebbs.service.IPostingsOtherService;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,7 @@ import static com.newcodebbs.Constants.RedisConstants.*;
 
 
 @Service
-@Log4j2
+@Slf4j
 public class ICommonServiceImpl implements ICommonService {
     @Resource
     private IAnalyseDataService analyseDataService;
@@ -75,8 +73,11 @@ public class ICommonServiceImpl implements ICommonService {
         log.debug("查询的list map数据{}",analyseData);
         HashMap<Object, Object> listMap = new HashMap<>();
         for (int i = 0; i < analyseData.size(); i++) {
-            listMap.put("info"+i,postingsOtherService.selectPostingOtherData(analyseData.get(i)));
-            listMap.put("other"+i,postingsOtherService.selectPostingOtherData(analyseData.get(i)));
+            // list 获取 数据之后转换实体类，然后获取数据
+            AnalyseData analyseData1 = (AnalyseData) analyseData.get(i);
+            log.debug("查询的数据{}",analyseData1);
+            listMap.put("info"+i,postingsInfoService.selectPostingInfoData(analyseData1.getPostingsId()));
+            listMap.put("other"+i,postingsOtherService.selectPostingOtherData(analyseData1.getPostingsId()));
         }
 //        List<?> postsOther = postingsOtherService.selectPostingOtherData(analyseData.get("postingsId"));
 //        List<?>  postsInfo = postingsInfoService.selectPostingInfoData(analyseData.get("postingsId"));

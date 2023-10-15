@@ -26,5 +26,5 @@ public interface IPostingsInfoService extends IService<PostingsInfo> {
     
     Result updatePost(PostDTO postDTO);
     
-    List<?> selectPostingInfoData(Object postingsId);
+    PostingsInfo selectPostingInfoData(Object postingsId);
 }
