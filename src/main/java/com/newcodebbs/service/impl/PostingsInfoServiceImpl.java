@@ -118,7 +118,7 @@ public class PostingsInfoServiceImpl extends ServiceImpl<PostingsInfoMapper, Pos
     }
     
     @Override
-    public PostingsInfo  selectPostingInfoData(Object postingsId) {
+    public PostingsInfo selectPostingInfoData(Object postingsId) {
         return query().eq("postings_id",postingsId).one();
     }
 }

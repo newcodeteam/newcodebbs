@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import static com.newcodebbs.Constants.ResultConstants.*;
 
@@ -42,7 +43,9 @@ public class Result implements Serializable {
     public static Result success(Object data){
         return new Result(RESULT_CODE_TRUE,"success",data);
     }
-    
+    public static Result success(Map<Object,Object> data){
+        return new Result(RESULT_CODE_TRUE,"success",data);
+    }
     /**
      * 注册成功
      * @param msg 返回描述

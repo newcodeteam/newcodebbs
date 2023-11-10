@@ -18,6 +18,7 @@ public class RedisConstants {
     public static final Long USER_TOKEN_DATA_TTL = 7L;
     public static final Long CACHE_BODY_TTL = 7L;
     public static final String CACHE_BODY_KEY = "cache:body:";
+    public static final String CACHE_BODY_PUT_KEY = "cache:put:";
     public static final String CACHE_lOCK_KEY = "cache:lock:";
     
     public static final Long CACHE_lOCK_TTL = 30L;

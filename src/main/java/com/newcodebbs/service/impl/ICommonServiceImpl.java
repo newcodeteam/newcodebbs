@@ -1,11 +1,14 @@
 package com.newcodebbs.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.entity.AnalyseData;
 import com.newcodebbs.service.IAnalyseDataService;
 import com.newcodebbs.service.ICommonService;
 import com.newcodebbs.service.IPostingsInfoService;
 import com.newcodebbs.service.IPostingsOtherService;
+import io.swagger.util.Json;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -39,17 +42,16 @@ public class ICommonServiceImpl implements ICommonService {
         // 采用逻辑过期
         String key  = CACHE_BODY_KEY + "body";
         // 判断是否存在缓存
-        Map<Object, Object> bodymap = stringRedisTemplate.opsForHash().entries(key);
+        String bodyAll = null;
+        bodyAll = stringRedisTemplate.opsForValue().get(key);
         // 不存在或者逻辑已过期 , 开始重构缓存
         String lockKey = CACHE_lOCK_KEY + "lock";
         boolean isLock = this.tryLock(lockKey);
         log.debug("执行到这里了0");
-        if (bodymap.isEmpty() && isLock ) {
+        if ( bodyAll == null && isLock ) {
             CACHE_THREAD.submit(() ->{
                try {
-                   Map<Object,Object> bodyData = this.saveBodyRedis(key);
-                   log.debug("获取了数据{}",bodyData);
-                   return Result.success(bodyData);
+                   return this.saveBodyRedis(key);
                } catch (Exception e) {
                    return Result.error("遭到不可抗力因素，程序停止，请联系管理员");
                } finally {
@@ -59,7 +61,7 @@ public class ICommonServiceImpl implements ICommonService {
         }
         // 如果 互斥锁在被用时恰好被并发了，那就先返回过期的数据防止被击穿.
         // 实际上，这个程序应该首先建立起缓存数据才能运行。
-        return Result.success(bodymap);
+        return Result.success(bodyAll);
     }
     
     /**
@@ -74,11 +76,14 @@ public class ICommonServiceImpl implements ICommonService {
         HashMap<Object, Object> listMap = new HashMap<>();
         for (int i = 0; i < analyseData.size(); i++) {
             // list 获取 数据之后转换实体类，然后获取数据
-            AnalyseData analyseData1 = (AnalyseData) analyseData.get(i);
+//            AnalyseData analyseData1 = (AnalyseData) analyseData.get(i);
+            AnalyseData analyseData1 = BeanUtil.fillBeanWithMap((Map<?, ?>) analyseData.get(i), new AnalyseData(),false);
             log.debug("查询的数据{}",analyseData1);
             listMap.put("info"+i,postingsInfoService.selectPostingInfoData(analyseData1.getPostingsId()));
             listMap.put("other"+i,postingsOtherService.selectPostingOtherData(analyseData1.getPostingsId()));
         }
+    
+        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(listMap));
 //        List<?> postsOther = postingsOtherService.selectPostingOtherData(analyseData.get("postingsId"));
 //        List<?>  postsInfo = postingsInfoService.selectPostingInfoData(analyseData.get("postingsId"));
         return listMap;
