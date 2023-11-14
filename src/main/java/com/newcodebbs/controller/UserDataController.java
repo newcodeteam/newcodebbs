@@ -6,6 +6,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.newcodebbs.dto.ChatDTO;
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.dto.UserForm;
+import com.newcodebbs.dto.UserInfoDTO;
 import com.newcodebbs.service.IUserDataService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -104,6 +105,12 @@ public class UserDataController {
         // todo 取消关注用户
        return iUserDataService.cancelFollowed(myUserId,userId);
    }
+    
+    @ApiOperation(value = "用户更改自己信息")
+    @PostMapping("/updateUser/{userId}")
+    public Result updateUser(@PathVariable String userId, @RequestBody UserInfoDTO userInfoDTO) {
+        return iUserDataService.updateUserDataInfo(userInfoDTO);
+    }
 
    
 }

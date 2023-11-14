@@ -2,6 +2,7 @@ package com.newcodebbs.service;
 
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.dto.UserForm;
+import com.newcodebbs.dto.UserInfoDTO;
 import com.newcodebbs.entity.UserData;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -47,4 +48,12 @@ public interface IUserDataService extends IService<UserData> {
     List<?> userSelectMailBlurData(String mail);
     
     List<?> userSelectNicknameData(String nickname);
+    
+    Result deleteUser(String userId);
+    
+    Result disableUser(String userId);
+    
+    Result startUser(String userId);
+    
+    Result updateUserDataInfo(UserInfoDTO userInfoDTO);
 }

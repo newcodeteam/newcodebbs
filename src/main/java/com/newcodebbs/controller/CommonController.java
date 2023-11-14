@@ -21,7 +21,6 @@ public class CommonController {
     
     @GetMapping("/body")
     public Result bodyData(){
-        // fixme bug 太多 待修复 暂时无法使用
         return commonService.getBodyData();
     }
 }

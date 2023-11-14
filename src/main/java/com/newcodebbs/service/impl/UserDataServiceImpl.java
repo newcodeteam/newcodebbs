@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.newcodebbs.dto.Result;
 import com.newcodebbs.dto.UserDTO;
 import com.newcodebbs.dto.UserForm;
+import com.newcodebbs.dto.UserInfoDTO;
 import com.newcodebbs.entity.UserData;
 import com.newcodebbs.entity.UserToken;
 import com.newcodebbs.mapper.UserDataMapper;
@@ -414,5 +415,54 @@ public class UserDataServiceImpl extends ServiceImpl<UserDataMapper, UserData> i
         QueryWrapper<UserData> wrapper = new QueryWrapper<>();
         wrapper.eq("user_nickname",nickname);
         return userDataMapper.selectList(wrapper);
+    }
+    
+    @Override
+    public Result deleteUser(String userId) {
+        UserDTO userDTO = UserHolder.getUser();
+        Integer typeId = userDTO.getUserType();
+        if (typeId == 1) {
+            try {
+                userDataMapper.deleteById(userId);
+                return Result.success("删除该"+userId+"成功");
+            } catch (Exception e) {
+                return Result.error("删除失败，id不存在");
+            }
+        } else return Result.error("权限不足");
+    }
+    
+    @Override
+    public Result disableUser(String userId) {
+        UserDTO userDTO = UserHolder.getUser();
+        Integer typeId = userDTO.getUserType();
+        if (typeId == 1) {
+            try {
+                userDataMapper.updateById(new UserData().setUserId(userId).setUserStatus(false));
+                return Result.success("禁用该"+userId+"成功");
+            } catch (Exception e) {
+                return Result.error("禁用失败，id不存在");
+            }
+        } else return Result.error("权限不足");
+    }
+    
+    @Override
+    public Result startUser(String userId) {
+        UserDTO userDTO = UserHolder.getUser();
+        Integer typeId = userDTO.getUserType();
+        if (typeId == 1) {
+            try {
+                userDataMapper.updateById(new UserData().setUserId(userId).setUserStatus(true));
+                return Result.success("启用该"+userId+"成功");
+            } catch (Exception e) {
+                return  Result.error("启用失败，id不存在");
+            }
+        } else return  Result.error("权限不足");
+    }
+    
+    @Override
+    public Result updateUserDataInfo(UserInfoDTO userInfoDTO) {
+        //todo 用户更改自己的信息
+        UserDTO userDTO = UserHolder.getUser();
+        return Result.success();
     }
 }
